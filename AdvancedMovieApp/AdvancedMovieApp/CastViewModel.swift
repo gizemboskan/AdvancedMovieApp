@@ -22,7 +22,7 @@ extension CastListViewModel{
 extension CastListViewModel {
     
     func castAt( _ index: Int) -> CastViewModel {
-        return castsVM[index]
+        castsVM[index]
     }
 }
 
@@ -37,10 +37,10 @@ struct CastViewModel {
 extension CastViewModel {
     
     var name: Observable<String> {
-        return Observable<String>.just(cast.name)
+        Observable<String>.just(cast.name)
     }
     
     var character: Observable<String> {
-        return Observable<String>.just(cast.character ?? "")
+        Observable<String>.just(cast.character ?? "")
     }
 }

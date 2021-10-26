@@ -22,8 +22,9 @@ extension MovieListViewModel{
 extension MovieListViewModel {
     
     func movieAt( _ index: Int) -> MovieViewModel {
-        return moviesVM[index]
+        moviesVM[index]
     }
+    
 }
 
 struct MovieViewModel {
@@ -37,10 +38,23 @@ struct MovieViewModel {
 extension MovieViewModel {
     
     var title: Observable<String> {
-        return Observable<String>.just(movie.title)
+        Observable<String>.just(movie.title)
     }
     
     var description: Observable<String> {
-        return Observable<String>.just(movie.overview)
+        Observable<String>.just(movie.overview)
     }
+    
+    var poster: Observable<String> {
+        Observable<String>.just(movie.posterPath)
+    }
+    
+    var releaseDate: Observable<String> {
+        Observable<String>.just(movie.releaseDate ?? "")
+    }
+    
+    var averageVote: Observable<Double> {
+        Observable<Double>.just(movie.voteAverage)
+    }
+    
 }
