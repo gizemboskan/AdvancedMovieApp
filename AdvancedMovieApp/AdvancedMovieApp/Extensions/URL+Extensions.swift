@@ -16,26 +16,39 @@ enum Endpoints {
 extension URL {
     
     static func getPopularMovies(page: Int) -> URL?{
-        return URL(string: Endpoints.base + "/movie/popular" + Endpoints.apiKeyParam + "&page=\(page)")
+        URL(string: Endpoints.base + "/movie/popular" + Endpoints.apiKeyParam + "&page=\(page)")
     }
     
     static func getMovieDetails(id: Int) -> URL?{
         
-        return URL(string: Endpoints.base + "/movie/\(id)" + Endpoints.apiKeyParam)
+        URL(string: Endpoints.base + "/movie/\(id)" + Endpoints.apiKeyParam)
     }
     
     static func getMovieCredits(id: Int) -> URL? {
-        return URL(string: Endpoints.base + "/movie/\(id)" + "credits" + Endpoints.apiKeyParam + "&language=en-US")
+        URL(string: Endpoints.base + "/movie/\(id)" + "/credits" + Endpoints.apiKeyParam)
+    }
+    
+    static func getPersonDetails(person_id: Int) -> URL? {
+        URL(string: Endpoints.base + "/person/\(person_id)" + Endpoints.apiKeyParam)
+    }
+    
+
+    static func getMovieCreditsForEachPerson(personId: Int) -> URL? {
+        URL(string: Endpoints.base + "/person/\(personId)" + "/movie_credits" +
+                Endpoints.apiKeyParam + "&language=en-US")
+    }
+    
+    static func getVideos(id: Int) -> URL? {
+        URL(string: Endpoints.base + "/movie/\(id)" + "/videos" + Endpoints.apiKeyParam)
     }
     
     static func search(query: String) -> URL?{
-        
-        return URL(string: Endpoints.base + "/search/movie" + Endpoints.apiKeyParam + "&query=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""))")
+        URL(string: Endpoints.base + "/search/movie" + Endpoints.apiKeyParam +
+                "&query=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""))")
     }
     
     static func posterImage(posterPath: String) -> URL?{
-        
-        return URL(string: "https://image.tmdb.org/t/p/w200/" + posterPath)
+        URL(string: "https://image.tmdb.org/t/p/w200/" + posterPath)
     }
     
 }

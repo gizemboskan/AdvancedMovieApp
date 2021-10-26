@@ -17,12 +17,13 @@ struct Resource<T> {
 extension URLRequest {
     
     static func load<T: Decodable>(resource: Resource<T>) -> Observable<T> {
-        return Observable.just(resource.url)
+        
+        Observable.just(resource.url)
             .flatMap{ url -> Observable<(response: HTTPURLResponse, data: Data)> in
                 let request = URLRequest(url: url)
                 return URLSession.shared.rx.response(request: request)
             }.map{ response, data -> T in
-                
+                print(String(decoding: data, as: UTF8.self))
                 if 200..<300 ~= response.statusCode {
                     return try JSONDecoder().decode(T.self, from: data)
                 }else {
@@ -30,5 +31,4 @@ extension URLRequest {
                 }
             }.asObservable()
     }
-    
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7A0B8E852728A17700444636 /* MovieDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0B8E842728A17700444636 /* MovieDetailViewModel.swift */; };
 		7AFC31B42728111E00A8315F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AFC31B32728111E00A8315F /* AppDelegate.swift */; };
 		7AFC31B62728111E00A8315F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AFC31B52728111E00A8315F /* SceneDelegate.swift */; };
 		7AFC31B82728111E00A8315F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AFC31B72728111E00A8315F /* ViewController.swift */; };
@@ -27,6 +28,9 @@
 		7AFC320F272848E900A8315F /* CastViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AFC320E272848E900A8315F /* CastViewModel.swift */; };
 		7AFC321127284B9400A8315F /* Cast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AFC321027284B9400A8315F /* Cast.swift */; };
 		7AFC321327284BB000A8315F /* CastResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AFC321227284BB000A8315F /* CastResults.swift */; };
+		7AFC321527285A2C00A8315F /* CastResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AFC321427285A2C00A8315F /* CastResponse.swift */; };
+		7AFC3217272895AD00A8315F /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AFC3216272895AD00A8315F /* Person.swift */; };
+		7AFC3219272897FC00A8315F /* Decoders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AFC3218272897FC00A8315F /* Decoders.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,6 +51,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7A0B8E842728A17700444636 /* MovieDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailViewModel.swift; sourceTree = "<group>"; };
 		7AFC31B02728111E00A8315F /* AdvancedMovieApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdvancedMovieApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AFC31B32728111E00A8315F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFC31B52728111E00A8315F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -71,6 +76,9 @@
 		7AFC320E272848E900A8315F /* CastViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastViewModel.swift; sourceTree = "<group>"; };
 		7AFC321027284B9400A8315F /* Cast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cast.swift; sourceTree = "<group>"; };
 		7AFC321227284BB000A8315F /* CastResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastResults.swift; sourceTree = "<group>"; };
+		7AFC321427285A2C00A8315F /* CastResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastResponse.swift; sourceTree = "<group>"; };
+		7AFC3216272895AD00A8315F /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
+		7AFC3218272897FC00A8315F /* Decoders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decoders.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -168,6 +176,7 @@
 		7AFC31E42728116E00A8315F /* Responses */ = {
 			isa = PBXGroup;
 			children = (
+				7AFC321427285A2C00A8315F /* CastResponse.swift */,
 			);
 			path = Responses;
 			sourceTree = "<group>";
@@ -175,6 +184,7 @@
 		7AFC31E62728117E00A8315F /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				7AFC3218272897FC00A8315F /* Decoders.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -186,6 +196,7 @@
 				7AFC3207272814DF00A8315F /* MovieResults.swift */,
 				7AFC321027284B9400A8315F /* Cast.swift */,
 				7AFC321227284BB000A8315F /* CastResults.swift */,
+				7AFC3216272895AD00A8315F /* Person.swift */,
 			);
 			name = DTOs;
 			sourceTree = "<group>";
@@ -240,6 +251,7 @@
 			children = (
 				7AFC320C272819BB00A8315F /* MovieViewModel.swift */,
 				7AFC320E272848E900A8315F /* CastViewModel.swift */,
+				7A0B8E842728A17700444636 /* MovieDetailViewModel.swift */,
 			);
 			name = ViewModels;
 			sourceTree = "<group>";
@@ -395,7 +407,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7AFC3217272895AD00A8315F /* Person.swift in Sources */,
 				7AFC321327284BB000A8315F /* CastResults.swift in Sources */,
+				7AFC3219272897FC00A8315F /* Decoders.swift in Sources */,
 				7AFC31B82728111E00A8315F /* ViewController.swift in Sources */,
 				7AFC320F272848E900A8315F /* CastViewModel.swift in Sources */,
 				7AFC320D272819BB00A8315F /* MovieViewModel.swift in Sources */,
@@ -406,6 +420,8 @@
 				7AFC3208272814DF00A8315F /* MovieResults.swift in Sources */,
 				7AFC3204272813C700A8315F /* URLRequest+Extensions.swift in Sources */,
 				7AFC31EC272811D200A8315F /* AppRouter.swift in Sources */,
+				7AFC321527285A2C00A8315F /* CastResponse.swift in Sources */,
+				7A0B8E852728A17700444636 /* MovieDetailViewModel.swift in Sources */,
 				7AFC32062728146B00A8315F /* Movie.swift in Sources */,
 				7AFC31B62728111E00A8315F /* SceneDelegate.swift in Sources */,
 			);

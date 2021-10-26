@@ -9,9 +9,9 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class ViewController: UIViewController {
+final class ViewController: UIViewController {
     
-    let bag = DisposeBag()
+    private let bag = DisposeBag()
     
     private var movieListVM: MovieListViewModel!
     private var castListVM: CastListViewModel!
@@ -40,16 +40,19 @@ class ViewController: UIViewController {
         //            }).disposed(by: bag)
         
         
-        guard let url = URL.getMovieCredits(id: 287) else { return }
-        let resource = Resource<CastResults>(url: url)
-        URLRequest.load(resource: resource)
-            .subscribe(onNext: { [weak self] castResponse in
-                let casts = castResponse.crew
-                self?.castListVM = CastListViewModel(casts)
-                
-                print(self?.castListVM.castsVM)
-                
-            }).disposed(by: bag)
+//        guard let url = URL.getMovieCredits(id: 287) else { return }
+//        let resource = Resource<CastResults>(url: url)
+//        URLRequest.load(resource: resource)
+//            .subscribe(onNext: { [weak self] castResponse in
+//                let casts = castResponse.cast
+//                self?.castListVM = CastListViewModel(casts)
+//                
+//                print(self?.castListVM.castsVM)
+//                
+//            }).disposed(by: bag)
+        
+        
+        
         
     }
     

@@ -20,3 +20,9 @@ struct MovieResults: Decodable {
     }
 }
 
+// MARK: - VideoResult
+struct VideoResult: Decodable {
+    
+    let results: [Video]
+    
+}
