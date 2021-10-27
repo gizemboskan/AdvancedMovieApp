@@ -32,7 +32,7 @@ extension URL {
         URL(string: Endpoints.base + "/person/\(person_id)" + Endpoints.apiKeyParam)
     }
     
-
+    
     static func getMovieCreditsForEachPerson(personId: Int) -> URL? {
         URL(string: Endpoints.base + "/person/\(personId)" + "/movie_credits" +
                 Endpoints.apiKeyParam + "&language=en-US")
@@ -42,8 +42,18 @@ extension URL {
         URL(string: Endpoints.base + "/movie/\(id)" + "/videos" + Endpoints.apiKeyParam)
     }
     
-    static func search(query: String) -> URL?{
+    static func searchMovie(query: String) -> URL?{
         URL(string: Endpoints.base + "/search/movie" + Endpoints.apiKeyParam +
+                "&query=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""))")
+    }
+    
+    static func searchPerson(query: String) -> URL?{
+        URL(string: Endpoints.base + "/search/person" + Endpoints.apiKeyParam +
+                "&query=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""))")
+    }
+    
+    static func searchPersonAndMovie(query: String) -> URL?{
+        URL(string: Endpoints.base + "/search/multi" + Endpoints.apiKeyParam +
                 "&query=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""))")
     }
     

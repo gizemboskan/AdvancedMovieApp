@@ -54,5 +54,4 @@ extension MovieDetailViewModel {
     var averageVote: Observable<Double> {
         Observable<Double>.just(movieDetail.voteAverage ?? 0.0)
     }
-    
 }

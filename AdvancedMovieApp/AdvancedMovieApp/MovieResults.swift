@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import UIKit
 // MARK: - MovieResults
 struct MovieResults: Decodable {
     let page: Int
