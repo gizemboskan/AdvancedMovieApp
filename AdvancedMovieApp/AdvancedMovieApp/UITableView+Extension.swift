@@ -75,3 +75,36 @@ extension UITableView {
         self.separatorStyle = .singleLine
     }
 }
+
+
+// MARK: - Create
+extension UITableView {
+    
+    static func create(style: UITableView.Style = .plain,
+                       estimatedRowHeight: CGFloat,
+                       backgroundColor: UIColor = .clear,
+                       headerView: UIView = UIView(),
+                       footerView: UIView = UIView(),
+                       keyboardDismissMode: UIScrollView.KeyboardDismissMode = .interactive) -> UITableView {
+        let tableView = UITableView(frame: .zero, style: style)
+        tableView.tableHeaderView = headerView
+        tableView.tableFooterView = footerView
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = estimatedRowHeight
+        tableView.backgroundColor = backgroundColor
+        tableView.keyboardDismissMode = .interactive
+        return tableView
+    }
+}
+
+// MARK: - Deque
+extension UITableView {
+    
+    func deque<T: ViewIdentifier>(at indexPath: IndexPath) -> T {
+        guard let cell = self.dequeueReusableCell(withIdentifier: T.viewIdentifier, for: indexPath) as? T else {
+            fatalError("can not deque cell with identifier \(T.viewIdentifier) from tableView \(self)")
+        }
+        
+        return cell
+    }
+}
