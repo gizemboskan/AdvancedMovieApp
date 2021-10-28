@@ -19,7 +19,7 @@ class MovieViewModel {
     private(set) var bag = DisposeBag()
     
     var id: Int = 0
-    
+    var path: String = ""
     func updateLoading(){
         isLoading.accept(false)
     }
@@ -45,20 +45,55 @@ class MovieViewModel {
             .disposed(by: bag)
     }
     
-    func searchMovie(by movie: String) {
+    func downloadPosterImage(path: String,_ completionHandler: ((Bool) -> ())? = nil){
+        
+        
+        Observable.just((path))
+            .do(onNext: { [isLoading] _ in isLoading.accept(true) })
+        guard let url = URL.posterImage(posterPath: path) else { return }
+        
+        URLRequest.load(resource: Resource<MovieResults>(url: url))
+            .observe(on: MainScheduler.instance)
+            .do(onDispose: { [isLoading] in isLoading.accept(false) })
+            .subscribe(onNext: { [weak self] movieResponse in
+                let movies = movieResponse.results
+                self?.updateMovieDatasource(with: movies)
+                
+                print(self?.movieDatasource.value as Any)
+                
+                if let handler = completionHandler {
+                    handler(true)
+                }
+            })
+            .disposed(by: bag)
+    }
+    
+    func searchMovie(by movie: String, _ completionHandler: ((Bool) -> ())? = nil) {
         Observable.just((id))
             .do(onNext: { [isLoading] _ in isLoading.accept(true) })
         guard let url = URL.searchMovie(query: movie) else { return }
         URLRequest.load(resource: Resource<MovieResults>(url: url))
             .observe(on: MainScheduler.instance)
             .retry(3) // to try the internet connection loss
-//            .catchError{ error in
-//                print(error.localizedDescription)
-//                return Observable.just(WeatherResult.empty)
-//            }.asDriver(onErrorJustReturn: )
-        
-        
+            //            .catchError{ error in
+            //                print(error.localizedDescription)
+            //                return Observable.just(WeatherResult.empty)
+            //            }.asDriver(onErrorJustReturn: )
+            .do(onDispose: { [isLoading] in isLoading.accept(false) })
+            .subscribe(onNext: { [weak self] movieResponse in
+                let movies = movieResponse.results
+                self?.updateFilteredMoviesDatasource(with: movies)
+                
+                print(self?.filteredMoviesDatasource.value as Any)
+                
+                if let handler = completionHandler {
+                    handler(true)
+                }
+            })
+            .disposed(by: bag)
     }
+    
+    
     
 }
 
@@ -75,6 +110,11 @@ extension MovieViewModel {
         self.filteredMoviesDatasource.accept(movies)
     }
     
+    func movieAt(at index: Int) {
+        let movie = movieDatasource.value[index]
+        //     let viewModel = MovieDetailViewModel(movie)
+        //    delegate?.navigate(to: .detail(viewModel))
+    }
     
     
     //    var title: Observable<String> {
@@ -98,3 +138,4 @@ extension MovieViewModel {
     //    }
     
 }
+
