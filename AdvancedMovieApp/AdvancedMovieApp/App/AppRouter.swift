@@ -5,5 +5,16 @@
 //  Created by Gizem Boskan on 26.10.2021.
 //
 
-import Foundation
+import UIKit
 
+final class AppRouter {
+    
+    func start(window: UIWindow) {
+        
+        let viewController = MainScreenBuilder.make()
+        let navigationController = UINavigationController(rootViewController: viewController)
+        window.rootViewController = navigationController
+        window.makeKeyAndVisible()
+        
+    }
+}

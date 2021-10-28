@@ -7,3 +7,9 @@
 
 import Foundation
 
+public let app = AppContainer()
+
+public final class AppContainer {
+    
+    let router = AppRouter()
+}
