@@ -13,18 +13,42 @@ class MovieViewModel {
     
     // MARK: - Properties
     
-    private(set) var isLoading = BehaviorRelay<Bool>(value: false)
+    var isLoading = BehaviorRelay<Bool>(value: false)
     private(set) var movieDatasource = BehaviorRelay<[Movie]>(value: [])
     private(set) var filteredMoviesDatasource = BehaviorRelay<[Movie]>(value: [])
     private(set) var bag = DisposeBag()
+    private(set) lazy var searchedKeyword = BehaviorRelay<String>(value: "")
+    private(set) lazy var isFiltering = BehaviorRelay<Bool>(value: false)
     
     var id: Int = 0
     var path: String = ""
+    
+    var datasourceSectionCount: Int {
+        isFiltering.value ? 2 : 1
+    }
+    
+    init() {
+     searchedKeyword
+            .asObservable()
+            .subscribe(onNext: {[weak self] searchedText in
+                if searchedText.isEmpty {
+                    self?.isFiltering.accept(false)
+                } else {
+                    self?.isFiltering.accept(true)
+                    self?.searchMovie(by: searchedText)
+                }
+            })
+            .disposed(by: bag)
+    }
+    
     func updateLoading(){
         isLoading.accept(false)
     }
     
-    func getMovieList(pageNumber: Int, _ completionHandler: ((Bool) -> ())? = nil) {
+    func getMovieList(pageNumber: Int) {
+        if isFiltering.value {
+            return
+        }
         
         Observable.just((id))
             .do(onNext: { [isLoading] _ in isLoading.accept(true) })
@@ -37,17 +61,12 @@ class MovieViewModel {
                 self?.updateMovieDatasource(with: movies)
                 
                 print(self?.movieDatasource.value as Any)
-                
-                if let handler = completionHandler {
-                    handler(true)
-                }
             })
             .disposed(by: bag)
     }
     
     func downloadPosterImage(path: String,_ completionHandler: ((Bool) -> ())? = nil){
-        
-        
+            
         Observable.just((path))
             .do(onNext: { [isLoading] _ in isLoading.accept(true) })
         guard let url = URL.posterImage(posterPath: path) else { return }
@@ -68,7 +87,7 @@ class MovieViewModel {
             .disposed(by: bag)
     }
     
-    func searchMovie(by movie: String, _ completionHandler: ((Bool) -> ())? = nil) {
+    func searchMovie(by movie: String) {
         Observable.just((id))
             .do(onNext: { [isLoading] _ in isLoading.accept(true) })
         guard let url = URL.searchMovie(query: movie) else { return }
@@ -83,12 +102,7 @@ class MovieViewModel {
             .subscribe(onNext: { [weak self] movieResponse in
                 let movies = movieResponse.results
                 self?.updateFilteredMoviesDatasource(with: movies)
-                
                 print(self?.filteredMoviesDatasource.value as Any)
-                
-                if let handler = completionHandler {
-                    handler(true)
-                }
             })
             .disposed(by: bag)
     }
@@ -116,6 +130,23 @@ extension MovieViewModel {
         //    delegate?.navigate(to: .detail(viewModel))
     }
     
+//    func getSectionType(at section: Int) -> SectionType {
+//        if shouldShowPreviousOrder {
+//            if section == 0 {
+//                return .movie
+//            } else if section == 1 {
+//                return isLoyaltyCampaignAvailable ? .loyalty : .person
+//            } else {
+//                return .person
+//            }
+//        } else {
+//            if section == 0 {
+//                return isLoyaltyCampaignAvailable ? .loyalty : .menu
+//            } else {
+//                return .menu
+//            }
+//        }
+//    }
     
     //    var title: Observable<String> {
     //        Observable<String>.just(movie.title)
@@ -137,5 +168,14 @@ extension MovieViewModel {
     //        Observable<Double>.just(movie.voteAverage)
     //    }
     
+}
+
+// MARK: - Enums
+extension MovieViewModel {
+    
+    enum SectionType {
+        case movie
+        case person
+    }
 }
 

@@ -22,6 +22,8 @@
 		7A0B8EB3272ABD3100444636 /* UIStackView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0B8EB2272ABD3100444636 /* UIStackView+Extensions.swift */; };
 		7A0B8EB5272ABE0D00444636 /* UILabel+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0B8EB4272ABE0D00444636 /* UILabel+Extension.swift */; };
 		7A0B8EBA272AE1CA00444636 /* MainScreenBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0B8EB9272AE1CA00444636 /* MainScreenBuilder.swift */; };
+		7A0B8EBC272AF07A00444636 /* UISearchBar+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0B8EBB272AF07A00444636 /* UISearchBar+Extensions.swift */; };
+		7A0B8EBF272AF14F00444636 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0B8EBE272AF14F00444636 /* SearchBar.swift */; };
 		7AFC31B42728111E00A8315F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AFC31B32728111E00A8315F /* AppDelegate.swift */; };
 		7AFC31B62728111E00A8315F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AFC31B52728111E00A8315F /* SceneDelegate.swift */; };
 		7AFC31B82728111E00A8315F /* MainPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AFC31B72728111E00A8315F /* MainPageViewController.swift */; };
@@ -79,6 +81,8 @@
 		7A0B8EB2272ABD3100444636 /* UIStackView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+Extensions.swift"; sourceTree = "<group>"; };
 		7A0B8EB4272ABE0D00444636 /* UILabel+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+Extension.swift"; sourceTree = "<group>"; };
 		7A0B8EB9272AE1CA00444636 /* MainScreenBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenBuilder.swift; sourceTree = "<group>"; };
+		7A0B8EBB272AF07A00444636 /* UISearchBar+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UISearchBar+Extensions.swift"; sourceTree = "<group>"; };
+		7A0B8EBE272AF14F00444636 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		7AFC31B02728111E00A8315F /* AdvancedMovieApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdvancedMovieApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AFC31B32728111E00A8315F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFC31B52728111E00A8315F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -146,6 +150,7 @@
 				7A0B8EB0272ABB8F00444636 /* UIImageView+Extension.swift */,
 				7A0B8EB2272ABD3100444636 /* UIStackView+Extensions.swift */,
 				7A0B8EB4272ABE0D00444636 /* UILabel+Extension.swift */,
+				7A0B8EBB272AF07A00444636 /* UISearchBar+Extensions.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -276,6 +281,14 @@
 			path = ViewControllers;
 			sourceTree = "<group>";
 		};
+		7A0B8EBD272AF13200444636 /* CustomViews */ = {
+			isa = PBXGroup;
+			children = (
+				7A0B8EBE272AF14F00444636 /* SearchBar.swift */,
+			);
+			path = CustomViews;
+			sourceTree = "<group>";
+		};
 		7AFC31A72728111E00A8315F = {
 			isa = PBXGroup;
 			children = (
@@ -385,6 +398,7 @@
 				7A0B8E95272AABBC00444636 /* MovieDetailScreen */,
 				7A0B8E96272AABCB00444636 /* PersonDetailScreen */,
 				7A0B8E912729FAA200444636 /* Extensions */,
+				7A0B8EBD272AF13200444636 /* CustomViews */,
 				7AFC32092728196E00A8315F /* ViewModels */,
 				7AFC320B2728199F00A8315F /* ViewControllers */,
 				7AFC320A2728197B00A8315F /* Cells */,
@@ -572,6 +586,7 @@
 				7A0B8E872729CCE000444636 /* PersonViewModel.swift in Sources */,
 				7AFC31B82728111E00A8315F /* MainPageViewController.swift in Sources */,
 				7AFC320F272848E900A8315F /* CastViewModel.swift in Sources */,
+				7A0B8EBC272AF07A00444636 /* UISearchBar+Extensions.swift in Sources */,
 				7A0B8EA4272AACE200444636 /* MainScreenView.swift in Sources */,
 				7AFC320D272819BB00A8315F /* MovieViewModel.swift in Sources */,
 				7AFC3202272813BC00A8315F /* URL+Extensions.swift in Sources */,
@@ -582,6 +597,7 @@
 				7AFC31B42728111E00A8315F /* AppDelegate.swift in Sources */,
 				7AFC3208272814DF00A8315F /* MovieResults.swift in Sources */,
 				7A0B8EA8272AAEA000444636 /* NSObject+Extensions.swift in Sources */,
+				7A0B8EBF272AF14F00444636 /* SearchBar.swift in Sources */,
 				7AFC3204272813C700A8315F /* URLRequest+Extensions.swift in Sources */,
 				7A0B8E892729D38F00444636 /* MovieDetailViewController.swift in Sources */,
 				7AFC31EC272811D200A8315F /* AppRouter.swift in Sources */,

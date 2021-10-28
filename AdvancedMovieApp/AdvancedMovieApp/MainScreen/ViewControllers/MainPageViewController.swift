@@ -16,6 +16,7 @@ final class MainPageViewController: UIViewController {
     private let bag = DisposeBag()
     private var mainScreenView = MainScreenView()
     private var viewmodel = MovieViewModel()
+    var currentPage: Int = 1
     
     // MARK: - Initilizations
     
@@ -33,7 +34,8 @@ final class MainPageViewController: UIViewController {
         super.viewDidLoad()
         arrangeViews()
         observeDataSource()
-        viewmodel.getMovieList(pageNumber: 2)
+        loadMoreMovies()
+        mainScreenView.tableView.restore()
     }
 }
 
@@ -44,7 +46,7 @@ extension MainPageViewController {
         view = mainScreenView
         title = "Movies"
         mainScreenView.tableView.delegate = self
-        mainScreenView.tableView.dataSource = self
+        mainScreenView.tableView.dataSource = self        
     }
 }
 
@@ -52,35 +54,99 @@ extension MainPageViewController {
 extension MainPageViewController {
     
     func observeDataSource(){
+        
         viewmodel.movieDatasource.subscribe(onNext: { [weak self] data in
             guard let self = self else { return }
             print(data.count)
             self.mainScreenView.tableView.reloadData()
         }).disposed(by: bag)
         
+        viewmodel.filteredMoviesDatasource.subscribe(onNext: { [weak self] data in
+            guard let self = self else { return }
+            print(data.count)
+
+            if data.isEmpty {
+                self.mainScreenView.tableView.setEmptyView(title: "Oops! Your search was not found.", message: "Search for another result!")
+            } else {
+                self.mainScreenView.tableView.restore()
+            }
+
+            self.mainScreenView.tableView.reloadData()
+
+        }).disposed(by: bag)
+        
+        mainScreenView.searchBar.rx.text.orEmpty
+            .changed
+            .asObservable()
+            .distinctUntilChanged()
+            .bind(to: viewmodel.searchedKeyword)
+            .disposed(by: bag)
+        
+        mainScreenView.searchBar.rx.cancelButtonClicked
+            .asObservable()
+            .map { return "" }
+            .bind(to: viewmodel.searchedKeyword)
+            .disposed(by: bag)
+        
+        viewmodel.isFiltering.subscribe(onNext: { [weak self] isFiltering in
+            guard let self = self else { return }
+            if !isFiltering {
+                self.mainScreenView.tableView.restore()
+                self.mainScreenView.tableView.reloadData()
+                self.mainScreenView.searchBar.resignFirstResponder()
+            }
+        }).disposed(by: bag)
     }
+    
+    func loadMoreMovies(){
+        if currentPage <= 500 {
+            currentPage += 1
+            viewmodel.getMovieList(pageNumber: currentPage)
+        }
+    }
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if (((scrollView.contentOffset.y + scrollView.frame.size.height) > scrollView.contentSize.height ) && viewmodel.isLoading.value != true){
+            self.viewmodel.isLoading.accept(true)
+            self.loadMoreMovies()
+        }
+    }
+    
 }
 
 // MARK: - UITableViewDataSource
 extension MainPageViewController: UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        viewmodel.datasourceSectionCount
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewmodel.movieDatasource.value.count
+        
+        viewmodel.isFiltering.value ? viewmodel.filteredMoviesDatasource.value.count : viewmodel.movieDatasource.value.count
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell: MovieListTableViewCell = tableView.deque(at: indexPath)
         
-        let movie = viewmodel.movieDatasource.value[indexPath.row]
-        
+        let movie = {
+            viewmodel.isFiltering.value ?   self.viewmodel.filteredMoviesDatasource.value[indexPath.row] :
+                self.viewmodel.movieDatasource.value[indexPath.row]
+        }()
+    
         let movieTitle = movie.title
         let posterPath = movie.posterPath
-        let movieImageViewURL = URL.posterImage(posterPath: posterPath)
+        let movieImageViewURL = URL.posterImage(posterPath: posterPath.orEmpty)
         let releaseDate = movie.releaseDate.orEmpty
         let averageVote = movie.voteAverage
         // let movieId = movie.id
         cell.populateUI(movieImageViewURL: movieImageViewURL, movieTitle: movieTitle, releaseDate: releaseDate, averageVote: averageVote)
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
     }
 }
 
@@ -93,4 +159,3 @@ extension MainPageViewController: UITableViewDelegate {
     }
     
 }
-

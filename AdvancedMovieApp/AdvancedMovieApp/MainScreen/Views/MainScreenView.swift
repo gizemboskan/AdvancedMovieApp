@@ -10,6 +10,27 @@ import UIKit
 
 final class MainScreenView: UIView {
     
+    // MARK: - topView
+    private lazy var searchBarView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.addSubview(searchBar)
+        searchBar.fillSuperview()
+        return view
+    }()
+    
+    private(set) lazy var searchBar: SearchBar = {
+        let searchBar = SearchBar()
+        searchBar.sizeAnchor(height: 60)
+        searchBar.enablesReturnKeyAutomatically = true
+        searchBar.placeholder = "Search a movie or a person!"
+        searchBar.layer.borderWidth = 1.0
+        searchBar.layer.borderColor = CGColor(gray: 2, alpha: 0.4)
+        return searchBar
+    }()
+    
+    
+    // MARK: - Table View
     lazy var tableView: UITableView = {
         
         let tableView = UITableView.create(estimatedRowHeight: 72)
@@ -17,6 +38,10 @@ final class MainScreenView: UIView {
         return tableView
     }()
     
+    // MARK: - All View
+    private lazy var stackView: UIStackView = .create(arrangedSubViews: [searchBar, tableView])
+    
+    // MARK: - Initilizations
     init() {
         super.init(frame: .zero)
         arrangeViews()
@@ -25,11 +50,13 @@ final class MainScreenView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+}
+
+private extension MainScreenView {
     
     func arrangeViews() {
-        backgroundColor = .white
-        addSubview(tableView)
-        tableView.fillSuperview(horizontalPadding: 12, verticalPadding: 12)
+        backgroundColor = .darkGray
+        addSubview(stackView)
+        stackView.fillSuperview()
     }
 }

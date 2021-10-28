@@ -14,6 +14,9 @@ final class MovieListTableViewCell: UITableViewCell {
         let movieImageView = UIImageView.create()
         movieImageView.contentMode = .scaleAspectFit
         movieImageView.sizeAnchor(width: 100, height: 100)
+        movieImageView.layer.borderColor = UIColor(white: 0, alpha: 0.3).cgColor
+        movieImageView.layer.borderWidth = 2
+        movieImageView.layer.cornerRadius = 3
         return movieImageView
     }()
     private lazy var topView: UIView = {
