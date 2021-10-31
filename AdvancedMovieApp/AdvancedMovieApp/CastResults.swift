@@ -9,8 +9,9 @@ import Foundation
 
 // MARK: - CastResults
 
-struct CastResults: Codable {
+struct CastResults: Decodable {
     let id: Int
     let cast, crew: [Cast]
 }
+
 

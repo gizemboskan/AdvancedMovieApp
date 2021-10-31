@@ -14,14 +14,15 @@ final class MovieDetailViewModel {
     // MARK: - Properties
     var isLoading = BehaviorRelay<Bool>(value: false)
     private(set) var movieDetailDatasource = BehaviorRelay<Movie?>(value: nil)
+    private(set) var movieIdDetailDatasource = BehaviorRelay<Int?>(value: nil)
     private(set) var movieCreditsDatasource = BehaviorRelay<[Cast]>(value: [])
     private(set) var bag = DisposeBag()
     var id: Int = 0
-
     
     func updateLoading(){
         isLoading.accept(false)
     }
+    
     func getMovieCredits(movieId: Int) {
         
         Observable.just((id))
@@ -44,26 +45,11 @@ final class MovieDetailViewModel {
 extension MovieDetailViewModel {
     
     func updateMovieCreditsDatasource(with movieCredits: [Cast]) {
-        
         self.movieCreditsDatasource.accept(movieCredits)
     }
     
+    func updateMovieDetailDatasource(with movie: Movie) {
+        self.movieDetailDatasource.accept(movie)
+    }
     
-    // TODO: ADD VIDEO AND CAST MEMBERS!!
-    
-    //    var title: Observable<String> {
-    //        Observable<String>.just(movieDetail.title ?? "")
-    //    }
-    //
-    //    var description: Observable<String> {
-    //        Observable<String>.just(movieDetail.overview ?? "")
-    //    }
-    //
-    //    var poster: Observable<String> {
-    //        Observable<String>.just(movieDetail.posterPath ?? "")
-    //    }
-    //
-    //    var averageVote: Observable<Double> {
-    //        Observable<Double>.just(movieDetail.voteAverage ?? 0.0)
-    //    }
 }

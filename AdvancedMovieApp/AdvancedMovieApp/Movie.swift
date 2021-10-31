@@ -9,34 +9,38 @@ import Foundation
 
 // MARK: - Movie
 struct Movie: Decodable {
-    let backdropPath: String?
-    let genreIDS: [Int]
     let id: Int
-    let originalLanguage, originalTitle, overview: String
-    let popularity: Double
+    let originalTitle: String?
     let posterPath: String?
-    let releaseDate: String?
-    let title: String
-    let video: Bool
-    let voteAverage: Double
-    let voteCount: Int
-    
+    let video: Bool?
+    let title, overview, releaseDate: String?
+    let voteAverage: Double?
+    let adult: Bool?
+    let backdropPath: String?
+    let voteCount: Int?
+    let genreIDS: [Int]?
+    let popularity: Double?
+    let character: String?
+    let creditID: String?
+    let order: Int?
+    let department, job: String?
+
     enum CodingKeys: String, CodingKey {
-        case backdropPath = "backdrop_path"
-        case genreIDS = "genre_ids"
         case id
-        case originalLanguage = "original_language"
         case originalTitle = "original_title"
-        case overview, popularity
         case posterPath = "poster_path"
+        case video, title, overview
         case releaseDate = "release_date"
-        case title, video
         case voteAverage = "vote_average"
+        case adult
+        case backdropPath = "backdrop_path"
         case voteCount = "vote_count"
+        case genreIDS = "genre_ids"
+        case popularity, character
+        case creditID = "credit_id"
+        case order, department, job
     }
 }
-
-
 // MARK: - MovieDetail
 struct MovieDetail: Decodable {
     let backdropPath: String?

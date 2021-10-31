@@ -10,11 +10,9 @@ import UIKit
 final class AppRouter {
     
     func start(window: UIWindow) {
-        
         let viewController = MainScreenBuilder.make()
         let navigationController = UINavigationController(rootViewController: viewController)
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
-        
     }
 }

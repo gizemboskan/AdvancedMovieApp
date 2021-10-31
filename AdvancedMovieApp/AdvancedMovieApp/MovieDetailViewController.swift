@@ -17,12 +17,9 @@ class MovieDetailViewController: UIViewController {
     var viewmodel = MovieDetailViewModel()
     
     // MARK: - Initilizations
-    
     init() {
         super.init(nibName: nil, bundle: nil)
-        
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -34,11 +31,9 @@ class MovieDetailViewController: UIViewController {
         observeDataSource()
         movieDetailView.castCollectionView.reloadData()
     }
-    
 }
 //  MARK: - Arrange Views
 extension MovieDetailViewController {
-    
     func arrangeViews() {
         view = movieDetailView
         movieDetailView.castCollectionView.delegate = self
@@ -50,14 +45,14 @@ extension MovieDetailViewController {
 extension MovieDetailViewController {
     
     func observeDataSource(){
-        
-        viewmodel.movieDetailDatasource.subscribe(onNext: { [weak self] data in
-            guard let self = self,
-                  let movie = self.viewmodel.movieDetailDatasource.value else { return }
-            self.observeUI(with: movie)
-            self.viewmodel.getMovieCredits(movieId: movie.id)
-        }).disposed(by: bag)
-        
+        viewmodel
+            .movieDetailDatasource
+            .subscribe(onNext: { [weak self] data in
+                guard let self = self,
+                      let movie = self.viewmodel.movieDetailDatasource.value else { return }
+                self.observeUI(with: movie)
+                self.viewmodel.getMovieCredits(movieId: movie.id)
+            }).disposed(by: bag)
         viewmodel.movieCreditsDatasource.subscribe(onNext: { [weak self] data in
             guard let self = self else { return }
             print(data.count)
@@ -66,7 +61,6 @@ extension MovieDetailViewController {
     }
     
     func observeUI(with movie: Movie?) {
-        
         let view = movieDetailView
         let movieTitle = movie?.title
         title = movieTitle
@@ -77,15 +71,13 @@ extension MovieDetailViewController {
         let releaseDate = movie?.releaseDate.orEmpty
         let rating = movie?.voteAverage ?? 0.0
         let movieDescription = movie?.overview ?? ""
-        // let movieId = movie.id
         view.populateUI(posterImageViewURL: posterImageViewURL, foregroundPosterImageViewURL: foregroundPosterImageViewURL, movieTitle: movieTitle ?? "", releaseDate: releaseDate ?? "", rating: rating, movieDescription: movieDescription)
     }
 }
 // MARK: - UICollectionViewDataSource
 extension MovieDetailViewController: UICollectionViewDataSource {
-    
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        print("viewmodel.movieCreditsDatasource.value.count \(viewmodel.movieCreditsDatasource.value.count)")
         return viewmodel.movieCreditsDatasource.value.count
     }
     
@@ -97,25 +89,23 @@ extension MovieDetailViewController: UICollectionViewDataSource {
         let castMemberCategory = movieCredits.job.orEmpty
         let castMemberName = movieCredits.originalName
         cell.populateUI(castMemberImageViewURL: castMemberImageViewURL, castMemberCategory: castMemberCategory, castMemberName: castMemberName)
-        
         return cell
     }
 }
 
 // MARK: - UICollectionViewDelegate
-extension MovieDetailViewController: UICollectionViewDelegate {
+extension MovieDetailViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let movieCredits = self.viewmodel.movieCreditsDatasource.value[indexPath.item]
         presentPersonDetail(with: movieCredits.id)
     }
-    
 }
 
 // MARK: - Person detail
 private extension MovieDetailViewController {
+    
     func presentPersonDetail(with id: Int?) {
-        
         guard let viewController = PersonDetailViewController() as? PersonDetailViewController else {
             assertionFailure("PersonDetailViewController not found")
             return

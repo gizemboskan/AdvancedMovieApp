@@ -18,16 +18,14 @@ class MovieViewModel {
     private(set) var bag = DisposeBag()
     private(set) lazy var searchedKeyword = BehaviorRelay<String>(value: "")
     private(set) lazy var isFiltering = BehaviorRelay<Bool>(value: false)
-    
     var id: Int = 0
     var path: String = ""
-    
     var datasourceSectionCount: Int {
         isFiltering.value ? 2 : 1
     }
-    
+    // MARK: - Initilizations
     init() {
-     searchedKeyword
+        searchedKeyword
             .asObservable()
             .subscribe(onNext: {[weak self] searchedText in
                 if searchedText.isEmpty {
@@ -39,7 +37,7 @@ class MovieViewModel {
             })
             .disposed(by: bag)
     }
-    
+    //MARK: - Helper Methods
     func updateLoading(){
         isLoading.accept(false)
     }
@@ -48,7 +46,6 @@ class MovieViewModel {
         if isFiltering.value {
             return
         }
-        
         Observable.just((id))
             .do(onNext: { [isLoading] _ in isLoading.accept(true) })
         guard let url = URL.getPopularMovies(page: pageNumber) else { return }
@@ -65,11 +62,9 @@ class MovieViewModel {
     }
     
     func downloadPosterImage(path: String,_ completionHandler: ((Bool) -> ())? = nil){
-            
         Observable.just((path))
             .do(onNext: { [isLoading] _ in isLoading.accept(true) })
         guard let url = URL.posterImage(posterPath: path) else { return }
-        
         URLRequest.load(resource: Resource<MovieResults>(url: url))
             .observe(on: MainScheduler.instance)
             .do(onDispose: { [isLoading] in isLoading.accept(false) })
@@ -93,10 +88,6 @@ class MovieViewModel {
         URLRequest.load(resource: Resource<MovieResults>(url: url))
             .observe(on: MainScheduler.instance)
             .retry(3) // to try the internet connection loss
-            //            .catchError{ error in
-            //                print(error.localizedDescription)
-            //                return Observable.just(WeatherResult.empty)
-            //            }.asDriver(onErrorJustReturn: )
             .do(onDispose: { [isLoading] in isLoading.accept(false) })
             .subscribe(onNext: { [weak self] movieResponse in
                 let movies = movieResponse.results
@@ -105,19 +96,16 @@ class MovieViewModel {
             })
             .disposed(by: bag)
     }
-    
 }
 
 //MARK: - Helper Methods
 extension MovieViewModel {
     
     func updateMovieDatasource(with movies: [Movie]) {
-        
         self.movieDatasource.accept(movies)
     }
     
     func updateFilteredMoviesDatasource(with movies: [Movie]) {
-        
         self.filteredMoviesDatasource.accept(movies)
     }
     
@@ -127,23 +115,23 @@ extension MovieViewModel {
         //    delegate?.navigate(to: .detail(viewModel))
     }
     
-//    func getSectionType(at section: Int) -> SectionType {
-//        if shouldShowPreviousOrder {
-//            if section == 0 {
-//                return .movie
-//            } else if section == 1 {
-//                return isLoyaltyCampaignAvailable ? .loyalty : .person
-//            } else {
-//                return .person
-//            }
-//        } else {
-//            if section == 0 {
-//                return isLoyaltyCampaignAvailable ? .loyalty : .menu
-//            } else {
-//                return .menu
-//            }
-//        }
-//    }
+    //    func getSectionType(at section: Int) -> SectionType {
+    //        if shouldShowPreviousOrder {
+    //            if section == 0 {
+    //                return .movie
+    //            } else if section == 1 {
+    //                return isLoyaltyCampaignAvailable ? .loyalty : .person
+    //            } else {
+    //                return .person
+    //            }
+    //        } else {
+    //            if section == 0 {
+    //                return isLoyaltyCampaignAvailable ? .loyalty : .menu
+    //            } else {
+    //                return .menu
+    //            }
+    //        }
+    //    }
     
     //    var title: Observable<String> {
     //        Observable<String>.just(movie.title)
@@ -169,7 +157,6 @@ extension MovieViewModel {
 
 // MARK: - Enums
 extension MovieViewModel {
-    
     enum SectionType {
         case movie
         case person

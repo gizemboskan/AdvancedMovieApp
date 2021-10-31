@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - Cast
-struct Cast: Codable {
+struct Cast: Decodable {
     let adult: Bool
     let gender, id: Int
     let knownForDepartment, name, originalName: String
@@ -19,7 +19,7 @@ struct Cast: Codable {
     let creditID: String
     let order: Int?
     let department, job: String?
-    
+
     enum CodingKeys: String, CodingKey {
         case adult, gender, id
         case knownForDepartment = "known_for_department"
@@ -33,4 +33,5 @@ struct Cast: Codable {
         case order, department, job
     }
 }
+
 
