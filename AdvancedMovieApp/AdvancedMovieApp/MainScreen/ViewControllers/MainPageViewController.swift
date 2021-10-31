@@ -147,6 +147,11 @@ extension MainPageViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        let movie = {
+            viewmodel.isFiltering.value ? self.viewmodel.filteredMoviesDatasource.value[indexPath.row] :
+                self.viewmodel.movieDatasource.value[indexPath.row]
+        }()
+        presentMovieDetail(with: movie)
     }
 }
 
@@ -158,4 +163,17 @@ extension MainPageViewController: UITableViewDelegate {
         UITableView.automaticDimension
     }
     
+}
+
+// MARK: - Movie detail
+private extension MainPageViewController {
+  func presentMovieDetail(with model: Movie?) {
+    
+    guard let viewController = MovieDetailViewController() as? MovieDetailViewController else {
+      assertionFailure("MovieDetailViewController not found")
+      return
+    }
+    viewController.viewmodel.movieDetailDatasource.accept(model)
+    navigationController?.pushViewController(viewController, animated: true)
+  }
 }

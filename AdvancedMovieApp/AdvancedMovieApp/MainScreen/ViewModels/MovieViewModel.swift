@@ -12,7 +12,6 @@ import RxCocoa
 class MovieViewModel {
     
     // MARK: - Properties
-    
     var isLoading = BehaviorRelay<Bool>(value: false)
     private(set) var movieDatasource = BehaviorRelay<[Movie]>(value: [])
     private(set) var filteredMoviesDatasource = BehaviorRelay<[Movie]>(value: [])
@@ -106,8 +105,6 @@ class MovieViewModel {
             })
             .disposed(by: bag)
     }
-    
-    
     
 }
 
