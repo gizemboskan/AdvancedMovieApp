@@ -23,7 +23,6 @@ extension UICollectionView {
 }
 // MARK: - Create UICollectionViewFlowLayout
 extension UICollectionViewFlowLayout {
-    
     static func create(itemSize: CGSize = .zero,
                        scrollDirection: UICollectionView.ScrollDirection = .horizontal,
                        interItemSpacing: CGFloat = .leastNormalMagnitude,
@@ -39,5 +38,4 @@ extension UICollectionViewFlowLayout {
         layout.invalidateLayout()
         return layout
     }
-    
 }

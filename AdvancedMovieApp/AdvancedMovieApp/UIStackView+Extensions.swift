@@ -8,7 +8,6 @@
 import UIKit
 
 public extension UIStackView {
-    
     static func create(
         arrangedSubViews: [UIView] = [],
         axis: NSLayoutConstraint.Axis = .vertical,

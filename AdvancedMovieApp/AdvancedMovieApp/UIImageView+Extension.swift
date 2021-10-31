@@ -11,8 +11,6 @@ import Kingfisher
 
 // MARK: - UIImageView Extension
 extension UIImageView {
-
-
     func setImage(with url: String?, placeholder: UIImage? = nil, errorImage: UIImage? = nil) {
         guard let urlString = url else {return}
         guard let url = URL(string: urlString) else {return}
@@ -25,9 +23,8 @@ extension UIImageView {
                 self.image = errorImage
             }
         })
-
     }
-
+    
     func setImage(with url: URL, placeholder: UIImage? = nil, errorImage: UIImage? = nil) {
         self.kf.setImage(with: url, placeholder: placeholder, completionHandler:  { result in
             switch result {
@@ -42,7 +39,6 @@ extension UIImageView {
 }
 
 extension UIImageView {
-    
     static func create(image: UIImage? = nil,
                        contentMode: ContentMode = .scaleToFill,
                        isUserInteractionEnabled: Bool = false,

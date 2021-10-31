@@ -10,14 +10,11 @@ public class SearchBar: UISearchBar {
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
-        
         arrangeViews()
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
     public override func layoutSubviews() {
         super.layoutSubviews()
         setShowsCancelButton(false, animated: false)
@@ -27,7 +24,6 @@ public class SearchBar: UISearchBar {
                                borderColor: .lightGray,
                                borderWidth: 1.0)
     }
-    
     public override var intrinsicContentSize: CGSize {
         return CGSize(width: bounds.width, height: 42.0)
     }
@@ -35,7 +31,6 @@ public class SearchBar: UISearchBar {
 
 // MARK: - Arrange Views
 private extension SearchBar {
-    
     func arrangeViews() {
         tintColor = .darkGray
         backgroundImage = UIImage()

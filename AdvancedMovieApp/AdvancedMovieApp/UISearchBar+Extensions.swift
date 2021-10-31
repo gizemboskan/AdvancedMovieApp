@@ -30,7 +30,6 @@ public extension UISearchBar {
         searchBar.textField?.backgroundColor = textFieldBackgroundColor
         return searchBar
     }
-
     var textField: UITextField? {
         value(forKey: "searchField") as? UITextField
     }

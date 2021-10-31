@@ -15,9 +15,7 @@ struct Resource<T> {
 }
 
 extension URLRequest {
-    
     static func load<T: Decodable>(resource: Resource<T>) -> Observable<T> {
-        
         Observable.just(resource.url)
             .flatMap{ url -> Observable<(response: HTTPURLResponse, data: Data)> in
                 let request = URLRequest(url: url)

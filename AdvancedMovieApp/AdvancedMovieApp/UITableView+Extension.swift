@@ -7,9 +7,9 @@
 
 import Foundation
 import UIKit
+
 // MARK: - Custom Empty View
 extension UITableView {
-    
     func setEmptyView(title: String, message: String){
         let emptyView = UIView(frame: CGRect(x: self.center.x, y: self.center.y, width: self.bounds.size.width, height: self.bounds.size.height))
         
@@ -79,7 +79,6 @@ extension UITableView {
 
 // MARK: - Create
 extension UITableView {
-    
     static func create(style: UITableView.Style = .plain,
                        estimatedRowHeight: CGFloat,
                        backgroundColor: UIColor = .clear,
@@ -99,12 +98,10 @@ extension UITableView {
 
 // MARK: - Deque
 extension UITableView {
-    
     func deque<T: ViewIdentifier>(at indexPath: IndexPath) -> T {
         guard let cell = self.dequeueReusableCell(withIdentifier: T.viewIdentifier, for: indexPath) as? T else {
             fatalError("can not deque cell with identifier \(T.viewIdentifier) from tableView \(self)")
         }
-        
         return cell
     }
 }

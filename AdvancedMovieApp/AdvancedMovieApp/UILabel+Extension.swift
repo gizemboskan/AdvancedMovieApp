@@ -16,7 +16,6 @@ public extension UILabel {
                        textAlignment: NSTextAlignment = .left,
                        accessibilityIdentifier: String? = nil,
                        tamic: Bool = true) -> UILabel {
-
         let label = UILabel()
         label.numberOfLines = numberOfLines
         label.font = font
