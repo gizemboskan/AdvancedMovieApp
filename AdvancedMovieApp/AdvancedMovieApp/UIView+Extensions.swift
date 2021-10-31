@@ -87,6 +87,11 @@ extension UIView {
         return separator
     }
     
+    // MARK: - Add Subviews
+    func addSubviews(_ views: UIView...) {
+        views.forEach { self.addSubview($0) }
+    }
+    
     
     // MARK: - Corner
     func roundCorners(with radius: CGFloat, borderColor: UIColor = .clear, borderWidth: CGFloat = .leastNormalMagnitude) {
