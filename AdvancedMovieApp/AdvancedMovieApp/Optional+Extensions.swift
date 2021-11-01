@@ -49,3 +49,30 @@ extension Optional where Wrapped: EmptyValueRepresentable {
         }
     }
 }
+
+// MARK: - Optional+Bool
+extension Optional where Wrapped == Bool {
+
+    /// Returns unwrapped value if optional is not nil; returns true otherwise.
+    var orTrue: Bool {
+        guard let self = self else { return true }
+
+        return self
+    }
+
+    /// Returns unwrapped value if optional is not nil; returns false otherwise.
+    var orFalse: Bool {
+        guard let self = self else { return false }
+
+        return self
+    }
+
+    /// Checks whether unwrapped value is equal to given optional's unwrapped value.
+    /// - Parameter bool: Bool? to compare
+    /// - Returns: True if unwrapped Bool? value is equal to given Bool?'s unwrapped value; returns false otherwise.
+    func isEqualTo(_ bool: Bool?) -> Bool {
+        guard let self = self, let bool = bool else { return false }
+
+        return self == bool
+    }
+}
