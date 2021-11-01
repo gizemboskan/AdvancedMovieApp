@@ -10,12 +10,12 @@ import RxSwift
 import RxCocoa
 import Kingfisher
 
-final class MainPageViewController: UIViewController {
+final class MainPageViewController: UIViewController{
     
     // MARK: - Properties
     private let bag = DisposeBag()
     private var mainScreenView = MainScreenView()
-    private var viewmodel = MovieViewModel()
+    private var viewModel = MovieViewModel()
     var currentPage: Int = 1
     
     // MARK: - Initilizations
@@ -50,13 +50,13 @@ extension MainPageViewController {
 // MARK: - Observe Data Source
 extension MainPageViewController {
     func observeDataSource(){
-        viewmodel.movieDatasource.subscribe(onNext: { [weak self] data in
+        viewModel.movieDatasource.subscribe(onNext: { [weak self] data in
             guard let self = self else { return }
             print(data.count)
             self.mainScreenView.tableView.reloadData()
         }).disposed(by: bag)
         
-        viewmodel.filteredMoviesDatasource.subscribe(onNext: { [weak self] data in
+        viewModel.filteredMoviesDatasource.subscribe(onNext: { [weak self] data in
             guard let self = self else { return }
             print(data.count)
             
@@ -73,16 +73,16 @@ extension MainPageViewController {
             .changed
             .asObservable()
             .distinctUntilChanged()
-            .bind(to: viewmodel.searchedKeyword)
+            .bind(to: viewModel.searchedKeyword)
             .disposed(by: bag)
         
         mainScreenView.searchBar.rx.cancelButtonClicked
             .asObservable()
             .map { return "" }
-            .bind(to: viewmodel.searchedKeyword)
+            .bind(to: viewModel.searchedKeyword)
             .disposed(by: bag)
         
-        viewmodel.isFiltering.subscribe(onNext: { [weak self] isFiltering in
+        viewModel.isFiltering.subscribe(onNext: { [weak self] isFiltering in
             guard let self = self else { return }
             if !isFiltering {
                 self.mainScreenView.tableView.restore()
@@ -90,19 +90,24 @@ extension MainPageViewController {
                 self.mainScreenView.searchBar.resignFirstResponder()
             }
         }).disposed(by: bag)
+        
+        viewModel.isLoading.asObservable()
+            .observe(on: MainScheduler.instance)
+            .bind(to: MainPageViewController.activityIndicator.rx.isHidden)
+            .disposed(by: bag)
     }
     
     func loadMoreMovies(){
         if currentPage <= 500 {
             currentPage += 1
-            viewmodel.getMovieList(pageNumber: currentPage)
+            viewModel.getMovieList(pageNumber: currentPage)
         }
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if (((scrollView.contentOffset.y + scrollView.frame.size.height) > scrollView.contentSize.height )
-                && viewmodel.isLoading.value != true){
-            self.viewmodel.isLoading.accept(true)
+                && viewModel.isLoading.value != true){
+            self.viewModel.isLoading.accept(true)
             self.loadMoreMovies()
         }
     }
@@ -111,33 +116,35 @@ extension MainPageViewController {
 // MARK: - UITableViewDataSource
 extension MainPageViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        viewmodel.datasourceSectionCount
+        viewModel.datasourceSectionCount
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewmodel.isFiltering.value ? viewmodel.filteredMoviesDatasource.value.count : viewmodel.movieDatasource.value.count
+        viewModel.isFiltering.value ? viewModel.filteredMoviesDatasource.value.count : viewModel.movieDatasource.value.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: MovieListTableViewCell = tableView.deque(at: indexPath)
         let movie = {
-            viewmodel.isFiltering.value ?   self.viewmodel.filteredMoviesDatasource.value[indexPath.row] :
-                self.viewmodel.movieDatasource.value[indexPath.row]
+            viewModel.isFiltering.value ?   self.viewModel.filteredMoviesDatasource.value[indexPath.row] :
+                self.viewModel.movieDatasource.value[indexPath.row]
         }()
         let movieTitle = movie.title ?? ""
         let posterPath = movie.posterPath
         let movieImageViewURL = URL.posterImage(posterPath: posterPath.orEmpty)
+        let foregroundPosterPath = movie.backdropPath
+        let foregroundPosterImageViewURL = URL.posterImage(posterPath: foregroundPosterPath.orEmpty)
         let releaseDate = movie.releaseDate.orEmpty
         let averageVote = movie.voteAverage ?? .zero
-        cell.populateUI(movieImageViewURL: movieImageViewURL, movieTitle: movieTitle,
+        cell.populateUI(movieImageViewURL: movieImageViewURL, foregroundPosterImageViewURL: foregroundPosterImageViewURL, movieTitle: movieTitle,
                         releaseDate: releaseDate, averageVote: averageVote)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let movie = {
-            viewmodel.isFiltering.value ? self.viewmodel.filteredMoviesDatasource.value[indexPath.row] :
-                self.viewmodel.movieDatasource.value[indexPath.row]
+            viewModel.isFiltering.value ? self.viewModel.filteredMoviesDatasource.value[indexPath.row] :
+                self.viewModel.movieDatasource.value[indexPath.row]
         }()
         presentMovieDetail(with: movie)
     }

@@ -9,10 +9,11 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-class MovieViewModel {
+final class MovieViewModel: ActivityHandler {
     
     // MARK: - Properties
-    var isLoading = BehaviorRelay<Bool>(value: false)
+    private(set) var isLoading = BehaviorRelay<Bool>(value: false)
+    var isEditableLoading: Bool = false
     private(set) var movieDatasource = BehaviorRelay<[Movie]>(value: [])
     private(set) var filteredMoviesDatasource = BehaviorRelay<[Movie]>(value: [])
     private(set) var bag = DisposeBag()
@@ -20,6 +21,7 @@ class MovieViewModel {
     private(set) lazy var isFiltering = BehaviorRelay<Bool>(value: false)
     var id: Int = 0
     var path: String = ""
+    var pageNumber: Int = 0
     var datasourceSectionCount: Int {
         isFiltering.value ? 2 : 1
     }
@@ -36,6 +38,8 @@ class MovieViewModel {
                 }
             })
             .disposed(by: bag)
+        
+        updateLoading()
     }
     //MARK: - Helper Methods
     func updateLoading(){
@@ -46,8 +50,8 @@ class MovieViewModel {
         if isFiltering.value {
             return
         }
-        Observable.just((id))
-            .do(onNext: { [isLoading] _ in isLoading.accept(true) })
+        Observable.just((pageNumber))
+            .do( onNext: { [isLoading] _ in isLoading.accept(true) })
         guard let url = URL.getPopularMovies(page: pageNumber) else { return }
         URLRequest.load(resource: Resource<MovieResults>(url: url))
             .observe(on: MainScheduler.instance)

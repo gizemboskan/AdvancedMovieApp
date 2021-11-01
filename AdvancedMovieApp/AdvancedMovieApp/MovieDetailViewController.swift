@@ -43,7 +43,6 @@ extension MovieDetailViewController {
 
 // MARK: - Observe Data Source
 extension MovieDetailViewController {
-    
     func observeDataSource(){
         viewmodel
             .movieDetailDatasource
@@ -86,7 +85,7 @@ extension MovieDetailViewController: UICollectionViewDataSource {
         let movieCredits = self.viewmodel.movieCreditsDatasource.value[indexPath.item]
         let profilePath = movieCredits.profilePath.orEmpty
         let castMemberImageViewURL = URL.posterImage(posterPath: profilePath)
-        let castMemberCategory = movieCredits.job.orEmpty
+        let castMemberCategory = movieCredits.character.orEmpty
         let castMemberName = movieCredits.originalName
         cell.populateUI(castMemberImageViewURL: castMemberImageViewURL, castMemberCategory: castMemberCategory, castMemberName: castMemberName)
         return cell
@@ -95,7 +94,6 @@ extension MovieDetailViewController: UICollectionViewDataSource {
 
 // MARK: - UICollectionViewDelegate
 extension MovieDetailViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let movieCredits = self.viewmodel.movieCreditsDatasource.value[indexPath.item]
         presentPersonDetail(with: movieCredits.id)

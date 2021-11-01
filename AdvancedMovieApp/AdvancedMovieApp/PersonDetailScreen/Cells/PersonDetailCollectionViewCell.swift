@@ -13,13 +13,21 @@ final class PersonDetailCollectionViewCell: UICollectionViewCell {
     private lazy var movieImageView: UIImageView = {
         let movieImageView = UIImageView.create(image: UIImage(named: "movie"))
         movieImageView.contentMode = .scaleAspectFit
-        movieImageView.sizeAnchor(width: 80, height: 80)
+        movieImageView.sizeAnchor(width: 120, height: 120)
         movieImageView.layer.borderColor = UIColor(white: 0, alpha: 0.3).cgColor
         movieImageView.layer.borderWidth = 2
         movieImageView.layer.cornerRadius = 6
+        movieImageView.roundCorners(with: 10, borderColor: .darkGray, borderWidth: 1.0)
         return movieImageView
     }()
     
+   
+    private lazy var movieNameLabel: UILabel = {
+        let movieNameLabel = UILabel.create(numberOfLines: 2, font: .systemFont(ofSize: 14.0, weight: .semibold), textColor: .darkGray, textAlignment: .center)
+        movieNameLabel.sizeAnchor(height: 25)
+        return movieNameLabel
+    }()
+   
     private lazy var releaseDateLabel: UILabel = {
         let releaseDateLabel = UILabel.create(numberOfLines: 2,
                                               font: .systemFont(ofSize: 12.0,
@@ -29,14 +37,8 @@ final class PersonDetailCollectionViewCell: UICollectionViewCell {
         return releaseDateLabel
     }()
     
-    private lazy var movieNameLabel: UILabel = {
-        let movieNameLabel = UILabel.create(numberOfLines: 2, font: .systemFont(ofSize: 10.0, weight: .semibold), textColor: .darkGray, textAlignment: .center)
-        movieNameLabel.sizeAnchor(height: 25)
-        return movieNameLabel
-    }()
-    
     // MARK: - All View
-    private lazy var allStackView: UIStackView = .create(arrangedSubViews: [movieImageView, releaseDateLabel, movieNameLabel], distribution: .equalSpacing, spacing: 10)
+    private lazy var allStackView: UIStackView = .create(arrangedSubViews: [movieImageView, movieNameLabel, releaseDateLabel], distribution: .equalSpacing, spacing: 4)
     
     // MARK: - Initialization
     override private init(frame: CGRect) {
@@ -51,20 +53,20 @@ final class PersonDetailCollectionViewCell: UICollectionViewCell {
 // MARK: - Arrange Views
 private extension PersonDetailCollectionViewCell {
     func arrangeViews() {
-        backgroundColor = .lightGray
-        roundCorners(with: 8.0, borderColor: .darkGray, borderWidth: 1.0)
+        backgroundColor = .white
+        roundCorners(with: 12.0, borderColor: .darkGray, borderWidth: 1.0)
         contentView.addSubviews(allStackView)
         allStackView.fillSuperview()
     }
 }
 
+// MARK: - Helpers
 extension PersonDetailCollectionViewCell {
-    func populateUI(movieImageViewURL: URL?, releaseDate: String?, movieName: String){
+    func populateUI(movieImageViewURL: URL?, movieName: String, releaseDate: String){
         guard let movieImageViewURL = movieImageViewURL else { return }
         movieImageView.kf.setImage(with: movieImageViewURL)
-        releaseDateLabel.text = releaseDate.orEmpty
         movieNameLabel.text = movieName
+        releaseDateLabel.text = releaseDate
         invalidateIntrinsicContentSize()
-        
     }
 }

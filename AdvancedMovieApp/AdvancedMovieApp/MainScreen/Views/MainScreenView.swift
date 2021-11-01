@@ -25,7 +25,7 @@ final class MainScreenView: UIView {
         searchBar.enablesReturnKeyAutomatically = true
         searchBar.placeholder = "Search a movie or a person!"
         searchBar.layer.borderWidth = 1.0
-        searchBar.layer.borderColor = CGColor(gray: 2, alpha: 0.4)
+        searchBar.layer.borderColor = UIColor(white: 0, alpha: 0.7).cgColor
         return searchBar
     }()
     
@@ -51,7 +51,6 @@ final class MainScreenView: UIView {
 
 // MARK: - Helpers
 private extension MainScreenView {
-    
     func arrangeViews() {
         backgroundColor = .darkGray
         addSubview(stackView)

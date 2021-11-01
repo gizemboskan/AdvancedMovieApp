@@ -23,18 +23,18 @@ final class MovieDetailView: UIView {
     // MARK: - topView
     private lazy var posterImageView: UIImageView = {
         let posterImageView = UIImageView.create(image: UIImage(named: "movie"))
-        // TODO: blur ekle!
         posterImageView.contentMode = .scaleAspectFit
-        posterImageView.layer.borderColor = UIColor(white: 0, alpha: 0.3).cgColor
+        posterImageView.layer.borderColor = UIColor(white: 0, alpha: 0.7).cgColor
         posterImageView.layer.borderWidth = 2
         posterImageView.layer.cornerRadius = 3
+        posterImageView.roundCorners(with: 10, borderColor: .darkGray, borderWidth: 1.0)
         return posterImageView
     }()
     
-    let foregroundPosterImageView: UIImageView = {
+    private lazy var foregroundPosterImageView: UIImageView = {
         let foregroundPoster = UIImageView.create(image: UIImage(named: "movie"))
-        foregroundPoster.contentMode = .scaleToFill
-        foregroundPoster.roundCorners(with: 20, borderColor: .lightGray, borderWidth: 1.0)
+        foregroundPoster.roundCorners(with: 30, borderColor: .darkGray, borderWidth: 1.0)
+        foregroundPoster.blurView.setup(style: UIBlurEffect.Style.dark, alpha: 0.7).enable()
         return foregroundPoster
     }()
     
@@ -53,35 +53,43 @@ final class MovieDetailView: UIView {
     
     // MARK: - midView
     private lazy var movieTitleLabel: UILabel = {
-        let movieTitleLabel = UILabel.create(font: .systemFont(ofSize: 16.0, weight: .semibold), textAlignment: .left)
+        let movieTitleLabel = UILabel.create(font: .systemFont(ofSize: 16.0, weight: .semibold), textColor: .darkGray, textAlignment: .center)
         movieTitleLabel.text = "movie name"
         movieTitleLabel.sizeToFit()
         movieTitleLabel.lineBreakMode = .byTruncatingTail
         return movieTitleLabel
     }()
+    private lazy var titleStackView: UIStackView = .create(arrangedSubViews: [movieTitleLabel])
     
-    private lazy var releaseDateLabel: UILabel = .create(text: "releaseDateLabel", font: .systemFont(ofSize: 12.0))
-    private lazy var ratingLabel: UILabel = .create(text: "ratingLabel", font: .systemFont(ofSize: 12.0))
+    private lazy var releaseDateFixedLabel: UILabel = .create(text: "Release Date:", font: .systemFont(ofSize: 12.0), textColor: .darkOrange, textAlignment: .center)
+    private lazy var releaseDateLabel: UILabel = .create(text: "releaseDateLabel", font: .systemFont(ofSize: 12.0), textColor: .darkGray, textAlignment: .center)
+    private lazy var dateStackView: UIStackView = .create(arrangedSubViews: [releaseDateFixedLabel, releaseDateLabel], spacing: 2)
+    
+    private lazy var averageVoteFixedLabel: UILabel = .create(text: "Rating:", font: .systemFont(ofSize: 12.0), textColor: .darkOrange, textAlignment: .center)
+    private lazy var ratingLabel: UILabel = .create(text: "ratingLabel", font: .systemFont(ofSize: 12.0), textColor: .darkGray, textAlignment: .center)
+    private lazy var voteStackView: UIStackView = .create(arrangedSubViews: [averageVoteFixedLabel, ratingLabel], spacing: 2)
+    
     private lazy var midView: UIView = {
         let view = UIView()
-        let midStackView: UIStackView = .create(arrangedSubViews: [movieTitleLabel, releaseDateLabel, ratingLabel],
+        let midStackView: UIStackView = .create(arrangedSubViews: [dateStackView, titleStackView,voteStackView],
                                                 axis: .horizontal, alignment: .center,
-                                                distribution: .fillProportionally, spacing: 10.0)
+                                                distribution: .fillEqually, spacing: 4.0)
         view.addSubview(midStackView)
-        midStackView.fillSuperview(with: UIEdgeInsets(top: 12.0, left: 12.0, bottom: 12.0, right: 12.0))
-        view.backgroundColor = .darkGray
+        midStackView.fillSuperview()
+        view.backgroundColor = .white
         return view
     }()
     
     // MARK: - movieDescriptionView
     private lazy var movieDescriptionLabel: UILabel = {
-        let movieDescriptionLabel = UILabel.create(text: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?", font: .systemFont(ofSize: 12.0, weight: .light))
+        let movieDescriptionLabel = UILabel.create(text: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?", font: .systemFont(ofSize: 14.0, weight: .semibold), textColor: .white)
         movieDescriptionLabel.sizeToFit()
-        movieDescriptionLabel.fillSuperview()
+        movieDescriptionLabel.fillSuperview(with: UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8))
         return movieDescriptionLabel
     }()
+    private lazy var descriptionStackView: UIStackView = .create(arrangedSubViews: [movieDescriptionLabel])
     
-    // MARK: - Bottom View
+    // MARK: - castCollectionView
     lazy var castCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         collectionView.showsHorizontalScrollIndicator = false
@@ -95,14 +103,19 @@ final class MovieDetailView: UIView {
         layout.itemSize = CGSize(width: 150,
                                  height: 150)
         layout.minimumInteritemSpacing = 8.0
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 10.0, bottom: 0, right: 10.0)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 4.0, bottom: 0, right: 4.0)
         layout.scrollDirection = .horizontal
         return layout
     }()
     
+    // MARK: - BottomView - video
+    
+    // TODO:
+    
+    
     // MARK: - allStackView
     // TODO Question why distribution didn't work properly when I set it to fill?
-    private lazy var allStackView: UIStackView = .create(arrangedSubViews: [topView, midView, .createSeparator(with: .horizontal, backgroundColor: .lightGray), movieDescriptionLabel, castCollectionView], alignment: .center, distribution: .equalSpacing)
+    private lazy var allStackView: UIStackView = .create(arrangedSubViews: [topView, midView, .createSeparator(with: .horizontal, backgroundColor: .lightGray), descriptionStackView, castCollectionView], alignment: .center, distribution: .equalSpacing, spacing: 12)
     
     // MARK: - Initilizations
     init() {
@@ -113,12 +126,12 @@ final class MovieDetailView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 }
-// MARK: - Helpers
 
+// MARK: - Helpers
 private extension MovieDetailView {
     func arrangeViews() {
         backgroundColor = .darkGray
-        castCollectionView.backgroundColor = .white
+        castCollectionView.backgroundColor = .darkGray
         setupScrollView()
         contentView.addSubview(allStackView)
         allStackView.fillSuperview()
@@ -151,8 +164,8 @@ private extension MovieDetailView {
         contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
     }
 }
+
 extension MovieDetailView {
-    
     func populateUI(posterImageViewURL: URL?, foregroundPosterImageViewURL: URL?, movieTitle: String,
                     releaseDate: String, rating: Double, movieDescription: String){
         guard let posterImageViewURL = posterImageViewURL else { return }
@@ -160,7 +173,7 @@ extension MovieDetailView {
         foregroundPosterImageView.kf.setImage(with: foregroundPosterImageViewURL)
         movieTitleLabel.text = movieTitle
         releaseDateLabel.text = releaseDate
-        ratingLabel.text = "Rating:\(String(rating))"
+        ratingLabel.text = String(rating)
         movieDescriptionLabel.text = movieDescription
         invalidateIntrinsicContentSize()
     }

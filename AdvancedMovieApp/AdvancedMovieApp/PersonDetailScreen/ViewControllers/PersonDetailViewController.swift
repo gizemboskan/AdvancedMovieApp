@@ -90,9 +90,9 @@ extension PersonDetailViewController: UICollectionViewDataSource {
         let movieCredits = self.viewmodel.personMovieDatasource.value[indexPath.item]
         let posterPath = movieCredits.posterPath.orEmpty
         let movieImageViewURL = URL.posterImage(posterPath: posterPath)
-        let releaseDate = movieCredits.releaseDate
+        let releaseDate = movieCredits.releaseDate.orEmpty
         let movieName = movieCredits.title ?? ""
-        cell.populateUI(movieImageViewURL: movieImageViewURL, releaseDate: releaseDate, movieName: movieName)
+        cell.populateUI(movieImageViewURL: movieImageViewURL, movieName: movieName, releaseDate: releaseDate)
         
         return cell
     }
@@ -109,12 +109,12 @@ extension PersonDetailViewController: UICollectionViewDelegate, UICollectionView
 // MARK: - Person detail
 private extension PersonDetailViewController {
     func presentMovieDetail(with model: Movie?) {
-        guard let viewController = MovieDetailViewController() as? MovieDetailViewController else {
-            assertionFailure("MovieDetailViewController not found")
-            return
-        }
-        viewController.viewmodel.movieDetailDatasource.accept(model)
-        navigationController?.pushViewController(viewController, animated: true)
+      guard let viewController = MovieDetailViewController() as? MovieDetailViewController else {
+        assertionFailure("MovieDetailViewController not found")
+        return
+      }
+      viewController.viewmodel.movieDetailDatasource.accept(model)
+      navigationController?.pushViewController(viewController, animated: true)
     }
 }
 

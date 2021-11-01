@@ -17,20 +17,24 @@ final class MovieDetailCollectionViewCell: UICollectionViewCell {
         castMemberImageView.layer.borderColor = UIColor(white: 0, alpha: 0.3).cgColor
         castMemberImageView.layer.borderWidth = 2
         castMemberImageView.layer.cornerRadius = 6
+        castMemberImageView.roundCorners(with: 10, borderColor: .darkGray, borderWidth: 1.0)
         return castMemberImageView
     }()
     
+    private lazy var castMemberCategoryFixedLabel: UILabel = .create(text: "Character:", font: .systemFont(ofSize: 12.0), textColor: .darkOrange, textAlignment: .center)
     private lazy var castMemberCategoryLabel: UILabel = {
         let categoryLabel = UILabel.create(numberOfLines: 2,
-                                           font: .systemFont(ofSize: 12.0,
+                                           font: .systemFont(ofSize: 14.0,
                                                              weight: .semibold),
                                            textColor: .darkGray, textAlignment: .center)
+        categoryLabel.lineBreakMode = .byWordWrapping
         categoryLabel.sizeAnchor(height: 25)
         return categoryLabel
     }()
+    private lazy var castMemberCategoryStackView: UIStackView = .create(arrangedSubViews: [castMemberCategoryFixedLabel, castMemberCategoryLabel], spacing: 2)
     
     private lazy var castMemberNameLabel: UILabel = {
-        let castMemberNameLabel = UILabel.create(numberOfLines: 2, font: .systemFont(ofSize: 10.0, weight: .semibold),
+        let castMemberNameLabel = UILabel.create(numberOfLines: 2, font: .systemFont(ofSize: 12.0, weight: .semibold),
                                                  textColor: .darkGray, textAlignment: .center)
         castMemberNameLabel.sizeAnchor(height: 25)
         return castMemberNameLabel
@@ -38,9 +42,9 @@ final class MovieDetailCollectionViewCell: UICollectionViewCell {
     
     // MARK: - All View
     private lazy var allStackView: UIStackView = .create(arrangedSubViews: [castMemberImageView,
-                                                                            castMemberCategoryLabel,
+                                                                            castMemberCategoryStackView,
                                                                             castMemberNameLabel],
-                                                         distribution: .equalSpacing, spacing: 10)
+                                                         distribution: .equalSpacing, spacing: 4)
     
     // MARK: - Initialization
     override private init(frame: CGRect) {
@@ -55,8 +59,8 @@ final class MovieDetailCollectionViewCell: UICollectionViewCell {
 // MARK: - Arrange Views
 private extension MovieDetailCollectionViewCell {
     func arrangeViews() {
-        backgroundColor = .lightGray
-        roundCorners(with: 8.0, borderColor: .darkGray, borderWidth: 1.0)
+        backgroundColor = .white
+        roundCorners(with: 12.0, borderColor: .darkGray, borderWidth: 1.0)
         contentView.addSubviews(allStackView)
         allStackView.fillSuperview()
     }
@@ -67,7 +71,7 @@ extension MovieDetailCollectionViewCell {
     func populateUI(castMemberImageViewURL: URL?, castMemberCategory: String, castMemberName: String){
         guard let castMemberImageViewURL = castMemberImageViewURL else { return }
         castMemberImageView.kf.setImage(with: castMemberImageViewURL)
-        castMemberCategoryLabel.text = "castMemberCategory"
+        castMemberCategoryLabel.text = castMemberCategory
         castMemberNameLabel.text = castMemberName
         invalidateIntrinsicContentSize()
     }
