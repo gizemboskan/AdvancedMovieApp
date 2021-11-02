@@ -11,7 +11,7 @@ import Foundation
 
 struct CastResults: Decodable {
     let id: Int
-    let cast, crew: [Cast]
+    let cast, crew: [Cast?]
 }
 
 

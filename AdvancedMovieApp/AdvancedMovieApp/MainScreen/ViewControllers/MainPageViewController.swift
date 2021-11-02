@@ -8,15 +8,13 @@
 import UIKit
 import RxSwift
 import RxCocoa
-import Kingfisher
 
 final class MainPageViewController: UIViewController{
     
     // MARK: - Properties
     private let bag = DisposeBag()
     private var mainScreenView = MainScreenView()
-    private var viewModel = MovieViewModel()
-    var currentPage: Int = 1
+    var viewModel: MovieViewModelProtocol?
     
     // MARK: - Initilizations
     init() {
@@ -50,15 +48,15 @@ extension MainPageViewController {
 // MARK: - Observe Data Source
 extension MainPageViewController {
     func observeDataSource(){
+        guard let viewModel = viewModel else { return }
+        
         viewModel.movieDatasource.subscribe(onNext: { [weak self] data in
             guard let self = self else { return }
-            print(data.count)
             self.mainScreenView.tableView.reloadData()
         }).disposed(by: bag)
         
         viewModel.filteredMoviesDatasource.subscribe(onNext: { [weak self] data in
             guard let self = self else { return }
-            print(data.count)
             
             if data.isEmpty {
                 self.mainScreenView.tableView.setEmptyView(title: "Oops! Your search was not found.",
@@ -91,23 +89,25 @@ extension MainPageViewController {
             }
         }).disposed(by: bag)
         
-        viewModel.isLoading.asObservable()
-            .observe(on: MainScheduler.instance)
-            .bind(to: MainPageViewController.activityIndicator.rx.isHidden)
+        viewModel.navigateToDetailReady
+            .compactMap { $0 }
+            .subscribe(onNext: { [weak self] detailViewModel in
+                let detailViewController = MovieDetailBuilder.make(with: detailViewModel)
+                self?.navigationController?.pushViewController(detailViewController, animated: true)
+            })
             .disposed(by: bag)
     }
     
     func loadMoreMovies(){
-        if currentPage <= 500 {
-            currentPage += 1
-            viewModel.getMovieList(pageNumber: currentPage)
-        }
+        viewModel?.getMovieList()
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        guard let viewModel = viewModel else { return }
+        
         if (((scrollView.contentOffset.y + scrollView.frame.size.height) > scrollView.contentSize.height )
                 && viewModel.isLoading.value != true){
-            self.viewModel.isLoading.accept(true)
+            viewModel.isLoading.accept(true)
             self.loadMoreMovies()
         }
     }
@@ -115,21 +115,22 @@ extension MainPageViewController {
 
 // MARK: - UITableViewDataSource
 extension MainPageViewController: UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        viewModel.datasourceSectionCount
-    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.isFiltering.value ? viewModel.filteredMoviesDatasource.value.count : viewModel.movieDatasource.value.count
+        guard let viewModel = viewModel else { return .zero }
+        
+        return viewModel.isFiltering.value ? viewModel.filteredMoviesDatasource.value.count : viewModel.movieDatasource.value.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let viewModel = viewModel else { return UITableViewCell() }
+        
         let cell: MovieListTableViewCell = tableView.deque(at: indexPath)
         let movie = {
-            viewModel.isFiltering.value ?   self.viewModel.filteredMoviesDatasource.value[indexPath.row] :
-                self.viewModel.movieDatasource.value[indexPath.row]
+            viewModel.isFiltering.value ? viewModel.filteredMoviesDatasource.value[indexPath.row] :
+                viewModel.movieDatasource.value[indexPath.row]
         }()
-        let movieTitle = movie.title ?? ""
+        let movieTitle = movie.title.orEmpty
         let posterPath = movie.posterPath
         let movieImageViewURL = URL.posterImage(posterPath: posterPath.orEmpty)
         let foregroundPosterPath = movie.backdropPath
@@ -142,11 +143,13 @@ extension MainPageViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let viewModel = viewModel else { return }
+        
         let movie = {
-            viewModel.isFiltering.value ? self.viewModel.filteredMoviesDatasource.value[indexPath.row] :
-                self.viewModel.movieDatasource.value[indexPath.row]
+            viewModel.isFiltering.value ? viewModel.filteredMoviesDatasource.value[indexPath.row] :
+                viewModel.movieDatasource.value[indexPath.row]
         }()
-        presentMovieDetail(with: movie)
+        viewModel.navigateToDetail(movie: movie)
     }
 }
 
@@ -157,15 +160,3 @@ extension MainPageViewController: UITableViewDelegate {
     }
 }
 
-// MARK: - Movie detail
-private extension MainPageViewController {
-    func presentMovieDetail(with model: Movie?) {
-        
-        guard let viewController = MovieDetailViewController() as? MovieDetailViewController else {
-            assertionFailure("MovieDetailViewController not found")
-            return
-        }
-        viewController.viewmodel.movieDetailDatasource.accept(model)
-        navigationController?.pushViewController(viewController, animated: true)
-    }
-}

@@ -14,7 +14,7 @@ final class PersonDetailViewController: UIViewController {
     // MARK: - Properties
     private let bag = DisposeBag()
     private var personDetailView = PersonDetailView()
-    var viewmodel = PersonDetailViewModel()
+    var viewModel: PersonDetailViewModelProtocol?
     
     // MARK: - Initilizations
     init() {
@@ -30,7 +30,7 @@ final class PersonDetailViewController: UIViewController {
         arrangeViews()
         observeDataSource()
         personDetailView.moviesCollectionView.reloadData()
-        viewmodel.getPersonDetails(personId: viewmodel.personIdDatasource.value ?? 0)
+        viewModel?.getPersonDetails(personId: viewModel?.personIdDatasource.value ?? 0)
     }
 }
 
@@ -46,19 +46,39 @@ extension PersonDetailViewController {
 // MARK: - Observe Data Source
 extension PersonDetailViewController {
     func observeDataSource(){
-        viewmodel.personDetailsDatasource
+        guard let viewModel = viewModel else { return }
+        
+        viewModel.personDetailsDatasource
             .subscribe(onNext: { [weak self] data in
                 guard let self = self,
-                      let person = self.viewmodel.personDetailsDatasource.value else { return }
+                      let person = viewModel.personDetailsDatasource.value else { return }
                 self.observeUI(with: person)
-                self.viewmodel.getPersonMovieCredits(personId: person.id)
+                viewModel.getPersonMovieCredits(personId: person.id)
             }).disposed(by: bag)
         
-        viewmodel.personMovieDatasource.subscribe(onNext: { [weak self] data in
+        viewModel.personMovieDatasource.subscribe(onNext: { [weak self] data in
             guard let self = self else { return }
-            print(data.count)
             self.personDetailView.moviesCollectionView.reloadData()
         }).disposed(by: bag)
+        
+        viewModel.isLoading.asObservable()
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isLoading in
+                if isLoading {
+                    self?.startLoading()
+                } else {
+                    self?.stopLoading()
+                }
+            })
+            .disposed(by: bag)
+        
+        viewModel.navigateToDetailReady
+            .compactMap { $0 }
+            .subscribe(onNext: { [weak self] detailViewModel in
+                let detailViewController = MovieDetailBuilder.make(with: detailViewModel)
+                self?.navigationController?.pushViewController(detailViewController, animated: true)
+            })
+            .disposed(by: bag)
     }
     
     func observeUI(with person: Person?) {
@@ -81,19 +101,21 @@ extension PersonDetailViewController {
 // MARK: - UICollectionViewDataSource
 extension PersonDetailViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print("viewmodel.personMovieDatasource.value.count \(viewmodel.personMovieDatasource.value.count)")
-        return viewmodel.personMovieDatasource.value.count
+        guard let viewModel = viewModel else { return .zero }
+        
+        return viewModel.personMovieDatasource.value.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell: PersonDetailCollectionViewCell = collectionView.dequeue(at: indexPath)
-        let movieCredits = self.viewmodel.personMovieDatasource.value[indexPath.item]
-        let posterPath = movieCredits.posterPath.orEmpty
-        let movieImageViewURL = URL.posterImage(posterPath: posterPath)
-        let releaseDate = movieCredits.releaseDate.orEmpty
-        let movieName = movieCredits.title ?? ""
-        cell.populateUI(movieImageViewURL: movieImageViewURL, movieName: movieName, releaseDate: releaseDate)
+        guard let viewModel = viewModel else { return UICollectionViewCell() }
         
+        let cell: PersonDetailCollectionViewCell = collectionView.dequeue(at: indexPath)
+        let movieCredits = viewModel.personMovieDatasource.value[indexPath.item]
+        let posterPath = movieCredits?.posterPath.orEmpty
+        let movieImageViewURL = URL.posterImage(posterPath: posterPath.orEmpty)
+        let releaseDate = movieCredits?.releaseDate.orEmpty
+        let movieName = movieCredits?.title ?? ""
+        cell.populateUI(movieImageViewURL: movieImageViewURL, movieName: movieName, releaseDate: releaseDate.orEmpty)
         return cell
     }
 }
@@ -101,20 +123,11 @@ extension PersonDetailViewController: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegate
 extension PersonDetailViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let movieCredits = self.viewmodel.personMovieDatasource.value[indexPath.item]
-        presentMovieDetail(with: movieCredits)
+        guard let viewModel = viewModel else { return }
+        
+        guard let movieCredits = viewModel.personMovieDatasource.value[indexPath.item] else { return  }
+        viewModel.navigateToDetail(movie: movieCredits)
     }
 }
 
-// MARK: - Person detail
-private extension PersonDetailViewController {
-    func presentMovieDetail(with model: Movie?) {
-        guard let viewController = MovieDetailViewController() as? MovieDetailViewController else {
-            assertionFailure("MovieDetailViewController not found")
-            return
-        }
-        viewController.viewmodel.movieDetailDatasource.accept(model)
-        navigationController?.pushViewController(viewController, animated: true)
-    }
-}
 

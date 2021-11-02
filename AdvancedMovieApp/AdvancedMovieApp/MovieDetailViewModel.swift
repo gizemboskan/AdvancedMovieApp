@@ -9,72 +9,82 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-final class MovieDetailViewModel {
+protocol MovieDetailViewModelProtocol {
+    var id: Int { get set }
+    var movieDetailDatasource: BehaviorRelay<Movie?> { get set }
+    var movieCreditsDatasource: BehaviorRelay<[Cast?]> { get set }
+    var movieVideoDatasource: BehaviorRelay<VideoResults?> { get set }
+    var isLoading: BehaviorRelay<Bool> { get set }
+    func getMovieCredits(movieId: Int)
+    func getVideos(movieId: Int)
+    var navigateToDetailReady: BehaviorRelay<PersonDetailViewModel?> { get set }
+    func navigateToDetail(id: Int)
+}
+
+final class MovieDetailViewModel: MovieDetailViewModelProtocol, MovieDetailApi {
     
     // MARK: - Properties
-    var isLoading = BehaviorRelay<Bool>(value: false)
-    private(set) var movieDetailDatasource = BehaviorRelay<Movie?>(value: nil)
-    private(set) var movieIdDetailDatasource = BehaviorRelay<Int?>(value: nil)
-    private(set) var movieCreditsDatasource = BehaviorRelay<[Cast]>(value: [])
-    private(set) var movieVideoDatasource = BehaviorRelay<Video?>(value: nil)
-    private(set) var bag = DisposeBag()
-    var id: Int = 0
+    private var bag = DisposeBag()
     
-    init() {
-        movieVideoDatasource
-            .asObservable()
-        
-        updateLoading()
-    }
-    func updateLoading(){
-        isLoading.accept(false)
-    }
+    var id: Int = 0
+    var isLoading = BehaviorRelay<Bool>(value: false)
+    var movieDetailDatasource = BehaviorRelay<Movie?>(value: nil)
+    var movieCreditsDatasource = BehaviorRelay<[Cast?]>(value: [nil])
+    var movieVideoDatasource = BehaviorRelay<VideoResults?>(value: nil)
+    var navigateToDetailReady = BehaviorRelay<PersonDetailViewModel?>(value: nil)
+    
     
     func getMovieCredits(movieId: Int) {
-        
-        Observable.just((id))
-            .do(onNext: { [isLoading] _ in isLoading.accept(true) })
-        guard let url = URL.getMovieCredits(id: movieId) else { return }
-        URLRequest.load(resource: Resource<CastResults>(url: url))
+        Observable.just((movieId))
+            .do( onNext: { [isLoading] _ in
+                isLoading.accept(true)
+            })
+            .flatMap { movieId in
+                self.getMovieCredits(movieId: movieId)
+            }
             .observe(on: MainScheduler.instance)
             .do(onDispose: { [isLoading] in isLoading.accept(false) })
             .subscribe(onNext: { [weak self] movieCreditsResponse in
-                let movieCredits = movieCreditsResponse.cast
-                self?.updateMovieCreditsDatasource(with: movieCredits)
-                
-                print(self?.movieCreditsDatasource.value as Any)
-            })
-            .disposed(by: bag)
-        
-        Observable.just((id))
-            .do(onNext: { [isLoading] _ in isLoading.accept(true) })
-        guard let url = URL.getVideos(id: movieId) else { return }
-        URLRequest.load(resource: Resource<Video>(url: url))
-            .observe(on: MainScheduler.instance)
-            .do(onDispose: { [isLoading] in isLoading.accept(false) })
-            .subscribe(onNext: { [weak self] movieVideoResponse in
-                let movieVideo = movieVideoResponse
-                self?.updatemovieVideoDatasource(with: movieVideo)
-                print(self?.movieVideoDatasource.value as Any)
+                self?.updateMovieCreditsDatasource(with: movieCreditsResponse.cast)
             })
             .disposed(by: bag)
     }
     
+    func getVideos(movieId: Int) {
+        Observable.just((movieId))
+            .do( onNext: { [isLoading] _ in
+                isLoading.accept(true)
+            })
+            .flatMap { movieId in
+                self.getVideos(movieId: movieId)
+            }
+            .observe(on: MainScheduler.instance)
+            .do(onDispose: { [isLoading] in isLoading.accept(false) })
+            .subscribe(onNext: { [weak self] movieVideoResponse in
+                self?.updatemovieVideoDatasource(with: movieVideoResponse)
+            })
+            .disposed(by: bag)
+    }
     
+    func navigateToDetail(id: Int) {
+        let personDetailViewModel = PersonDetailViewModel()
+        personDetailViewModel.personIdDatasource.accept(id)
+        navigateToDetailReady.accept(personDetailViewModel)
+    }
 }
 
 //MARK: - Helper Methods
 extension MovieDetailViewModel {
     
-    func updateMovieCreditsDatasource(with movieCredits: [Cast]) {
+    private func updateMovieCreditsDatasource(with movieCredits: [Cast?]) {
         self.movieCreditsDatasource.accept(movieCredits)
     }
     
-    func updateMovieDetailDatasource(with movie: Movie) {
+    private func updateMovieDetailDatasource(with movie: Movie) {
         self.movieDetailDatasource.accept(movie)
     }
     
-    func updatemovieVideoDatasource(with movieVideo: Video?) {
+    private func updatemovieVideoDatasource(with movieVideo: VideoResults?) {
         self.movieVideoDatasource.accept(movieVideo)
     }
     

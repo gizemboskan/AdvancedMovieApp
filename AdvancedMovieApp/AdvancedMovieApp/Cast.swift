@@ -9,10 +9,10 @@ import Foundation
 
 // MARK: - Cast
 struct Cast: Decodable {
-    let adult: Bool
-    let gender, id: Int
-    let knownForDepartment, name, originalName: String
-    let popularity: Double
+    let adult: Bool?
+    let gender, id: Int?
+    let knownForDepartment, name, originalName: String?
+    let popularity: Double?
     let profilePath: String?
     let castID: Int?
     let character: String?

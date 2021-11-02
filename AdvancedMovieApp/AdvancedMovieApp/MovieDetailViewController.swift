@@ -14,7 +14,7 @@ class MovieDetailViewController: UIViewController {
     // MARK: - Properties
     private let bag = DisposeBag()
     private var movieDetailView = MovieDetailView()
-    var viewmodel = MovieDetailViewModel()
+    var viewModel: MovieDetailViewModelProtocol?
     
     // MARK: - Initilizations
     init() {
@@ -44,32 +44,49 @@ extension MovieDetailViewController {
 // MARK: - Observe Data Source
 extension MovieDetailViewController {
     func observeDataSource(){
-        viewmodel
+        guard let viewModel = viewModel else { return }
+        
+        viewModel
             .movieDetailDatasource
             .subscribe(onNext: { [weak self] data in
                 guard let self = self,
-                      let movie = self.viewmodel.movieDetailDatasource.value else { return }
-                //     let video = self.viewmodel.movieVideoDatasource.value else { return }
+                      let movie = viewModel.movieDetailDatasource.value else { return }
                 self.observeUI(with: movie)
-                self.viewmodel.getMovieCredits(movieId: movie.id)
-                // self.observeMovieURL(with: video)
-                
+                viewModel.getMovieCredits(movieId: movie.id)
+                viewModel.getVideos(movieId: movie.id)
             }).disposed(by: bag)
-        viewmodel.movieCreditsDatasource.subscribe(onNext: { [weak self] data in
+        
+        viewModel.movieCreditsDatasource.subscribe(onNext: { [weak self] data in
             guard let self = self else { return }
-            print(data.count)
             self.movieDetailView.castCollectionView.reloadData()
         }).disposed(by: bag)
         
-        //        movieDetailView.movieTrailerButton.rx.tap
-        //            .subscribe(onNext: { [weak self] data in
-        //                guard let self = self else { return }
-        //                let movieVideoURL = self.viewmodel.movieVideoDatasource.value?.deepLinkURL
-        //                // OPEN URL!
-        //                let application = UIApplication.shared
-        //                application.open(((movieVideoURL ?? URL(string: "www.google.com"))!))
-        //            })
-        //            .disposed(by: bag)
+        viewModel.isLoading.asObservable()
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isLoading in
+                if isLoading {
+                    self?.startLoading()
+                } else {
+                    self?.stopLoading()
+                }
+            })
+            .disposed(by: bag)
+        
+        movieDetailView.movieTrailerButton.rx.tap
+            .subscribe(onNext: { [weak self] data in
+                if let movieVideoURL = viewModel.movieVideoDatasource.value?.results.first?.browserURL, UIApplication.shared.canOpenURL(movieVideoURL) {
+                    UIApplication.shared.open(movieVideoURL)
+                }
+            })
+            .disposed(by: bag)
+        
+        viewModel.navigateToDetailReady
+            .compactMap{ $0 }
+            .subscribe(onNext: { [weak self] personDetailViewModel in
+                let personDetailViewController = PersonDetailBuilder.make(with: personDetailViewModel)
+                self?.navigationController?.pushViewController(personDetailViewController, animated: true)
+            })
+            .disposed(by: bag)
     }
     
     func observeUI(with movie: Movie?) {
@@ -85,27 +102,23 @@ extension MovieDetailViewController {
         let movieDescription = movie?.overview ?? ""
         view.populateUI(posterImageViewURL: posterImageViewURL, foregroundPosterImageViewURL: foregroundPosterImageViewURL, movieTitle: movieTitle ?? "", releaseDate: releaseDate ?? "", rating: rating, movieDescription: movieDescription)
     }
-    
-    func observeMovieURL(with movieVideo: Video?) {
-        let movieVideoURL = movieVideo?.deepLinkURL
-        
-    }
 }
 // MARK: - UICollectionViewDataSource
 extension MovieDetailViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print("viewmodel.movieCreditsDatasource.value.count \(viewmodel.movieCreditsDatasource.value.count)")
-        return viewmodel.movieCreditsDatasource.value.count
+        return viewModel?.movieCreditsDatasource.value.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let viewModel = viewModel else { return UICollectionViewCell() }
+        
         let cell: MovieDetailCollectionViewCell = collectionView.dequeue(at: indexPath)
-        let movieCredits = self.viewmodel.movieCreditsDatasource.value[indexPath.item]
-        let profilePath = movieCredits.profilePath.orEmpty
-        let castMemberImageViewURL = URL.posterImage(posterPath: profilePath)
-        let castMemberCategory = movieCredits.character.orEmpty
-        let castMemberName = movieCredits.originalName
-        cell.populateUI(castMemberImageViewURL: castMemberImageViewURL, castMemberCategory: castMemberCategory, castMemberName: castMemberName)
+        let movieCredits = viewModel.movieCreditsDatasource.value[indexPath.item]
+        let profilePath = movieCredits?.profilePath.orEmpty
+        let castMemberImageViewURL = URL.posterImage(posterPath: profilePath.orEmpty)
+        let castMemberCategory = movieCredits?.character.orEmpty
+        let castMemberName = movieCredits?.originalName
+        cell.populateUI(castMemberImageViewURL: castMemberImageViewURL, castMemberCategory: castMemberCategory.orEmpty, castMemberName: castMemberName.orEmpty)
         return cell
     }
 }
@@ -113,20 +126,10 @@ extension MovieDetailViewController: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegate
 extension MovieDetailViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let movieCredits = self.viewmodel.movieCreditsDatasource.value[indexPath.item]
-        presentPersonDetail(with: movieCredits.id)
+        guard let viewModel = viewModel else { return }
+        
+        let movieCredits = viewModel.movieCreditsDatasource.value[indexPath.item]
+        viewModel.navigateToDetail(id: movieCredits?.id ?? 0)
     }
 }
 
-// MARK: - Person detail
-private extension MovieDetailViewController {
-    
-    func presentPersonDetail(with id: Int?) {
-        guard let viewController = PersonDetailViewController() as? PersonDetailViewController else {
-            assertionFailure("PersonDetailViewController not found")
-            return
-        }
-        viewController.viewmodel.personIdDatasource.accept(id)
-        navigationController?.pushViewController(viewController, animated: true)
-    }
-}

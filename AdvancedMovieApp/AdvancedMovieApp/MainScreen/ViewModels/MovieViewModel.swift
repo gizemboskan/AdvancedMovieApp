@@ -9,22 +9,32 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-final class MovieViewModel: ActivityHandler {
+protocol MovieViewModelProtocol {
+    var id: Int { get set }
+    var movieDatasource: BehaviorRelay<[Movie]> { get set }
+    var filteredMoviesDatasource: BehaviorRelay<[Movie]> { get set }
+    var searchedKeyword: BehaviorRelay<String> { get set }
+    var isFiltering: BehaviorRelay<Bool> { get set }
+    var isLoading: BehaviorRelay<Bool> { get set }
+    var navigateToDetailReady: BehaviorRelay<MovieDetailViewModel?> { get set }
+    func getMovieList()
+    func navigateToDetail(movie: Movie)
+}
+
+final class MovieViewModel: MovieViewModelProtocol, MainScreenApi {
     
     // MARK: - Properties
-    private(set) var isLoading = BehaviorRelay<Bool>(value: false)
-    var isEditableLoading: Bool = false
-    private(set) var movieDatasource = BehaviorRelay<[Movie]>(value: [])
-    private(set) var filteredMoviesDatasource = BehaviorRelay<[Movie]>(value: [])
-    private(set) var bag = DisposeBag()
-    private(set) lazy var searchedKeyword = BehaviorRelay<String>(value: "")
-    private(set) lazy var isFiltering = BehaviorRelay<Bool>(value: false)
+    private var currentPage: Int = 1
+    private var bag = DisposeBag()
+    
     var id: Int = 0
-    var path: String = ""
-    var pageNumber: Int = 0
-    var datasourceSectionCount: Int {
-        isFiltering.value ? 2 : 1
-    }
+    var movieDatasource = BehaviorRelay<[Movie]>(value: [])
+    var filteredMoviesDatasource = BehaviorRelay<[Movie]>(value: [])
+    var searchedKeyword = BehaviorRelay<String>(value: "")
+    var isFiltering = BehaviorRelay<Bool>(value: false)
+    var isLoading = BehaviorRelay<Bool>(value: false)
+    var navigateToDetailReady = BehaviorRelay<MovieDetailViewModel?>(value: nil)
+    
     // MARK: - Initilizations
     init() {
         searchedKeyword
@@ -38,132 +48,63 @@ final class MovieViewModel: ActivityHandler {
                 }
             })
             .disposed(by: bag)
-        
-        updateLoading()
-    }
-    //MARK: - Helper Methods
-    func updateLoading(){
-        isLoading.accept(false)
     }
     
-    func getMovieList(pageNumber: Int) {
-        if isFiltering.value {
+    //MARK: - Public Methods
+    func getMovieList() {
+        if isFiltering.value, currentPage > 500 {
             return
         }
-        Observable.just((pageNumber))
-            .do( onNext: { [isLoading] _ in isLoading.accept(true) })
-        guard let url = URL.getPopularMovies(page: pageNumber) else { return }
-        URLRequest.load(resource: Resource<MovieResults>(url: url))
+        
+        currentPage += 1
+        
+        Observable.just((currentPage))
+            .do( onNext: { [isLoading] _ in
+                isLoading.accept(true)
+            })
+            .flatMap { pageNumber in
+                self.getMovieList(pageNumber: pageNumber)
+            }
             .observe(on: MainScheduler.instance)
             .do(onDispose: { [isLoading] in isLoading.accept(false) })
             .subscribe(onNext: { [weak self] movieResponse in
-                let movies = movieResponse.results
-                self?.updateMovieDatasource(with: movies)
-                
-                print(self?.movieDatasource.value as Any)
+                self?.updateMovieDatasource(with: movieResponse.results)
             })
             .disposed(by: bag)
     }
     
-    func downloadPosterImage(path: String,_ completionHandler: ((Bool) -> ())? = nil){
-        Observable.just((path))
-            .do(onNext: { [isLoading] _ in isLoading.accept(true) })
-        guard let url = URL.posterImage(posterPath: path) else { return }
-        URLRequest.load(resource: Resource<MovieResults>(url: url))
-            .observe(on: MainScheduler.instance)
-            .do(onDispose: { [isLoading] in isLoading.accept(false) })
-            .subscribe(onNext: { [weak self] movieResponse in
-                let movies = movieResponse.results
-                self?.updateMovieDatasource(with: movies)
-                
-                print(self?.movieDatasource.value as Any)
-                
-                if let handler = completionHandler {
-                    handler(true)
-                }
-            })
-            .disposed(by: bag)
-    }
-    
-    func searchMovie(by movie: String) {
-        Observable.just((id))
-            .do(onNext: { [isLoading] _ in isLoading.accept(true) })
-        guard let url = URL.searchMovie(query: movie) else { return }
-        URLRequest.load(resource: Resource<MovieResults>(url: url))
-            .observe(on: MainScheduler.instance)
-            .retry(3) // to try the internet connection loss
-            .do(onDispose: { [isLoading] in isLoading.accept(false) })
-            .subscribe(onNext: { [weak self] movieResponse in
-                let movies = movieResponse.results
-                self?.updateFilteredMoviesDatasource(with: movies)
-                print(self?.filteredMoviesDatasource.value as Any)
-            })
-            .disposed(by: bag)
+    func navigateToDetail(movie: Movie) {
+        let detailViewModel = MovieDetailViewModel()
+        detailViewModel.movieDetailDatasource.accept(movie)
+        navigateToDetailReady.accept(detailViewModel)
     }
 }
 
 //MARK: - Helper Methods
 extension MovieViewModel {
     
-    func updateMovieDatasource(with movies: [Movie]) {
+    private func searchMovie(by movie: String) {
+        Observable.just((movie))
+            .do( onNext: { [isLoading] _ in
+                isLoading.accept(true)
+            })
+            .flatMap { movie in
+                self.searchMovie(movie: movie)
+            }
+            .observe(on: MainScheduler.instance)
+            .retry(3) // to try the internet connection loss
+            .do(onDispose: { [isLoading] in isLoading.accept(false) })
+            .subscribe(onNext: { [weak self] movieResponse in
+                self?.updateFilteredMoviesDatasource(with: movieResponse.results)
+            })
+            .disposed(by: bag)
+    }
+    
+    private func updateMovieDatasource(with movies: [Movie]) {
         self.movieDatasource.accept(movies)
     }
     
-    func updateFilteredMoviesDatasource(with movies: [Movie]) {
+    private func updateFilteredMoviesDatasource(with movies: [Movie]) {
         self.filteredMoviesDatasource.accept(movies)
     }
-    
-    func movieAt(at index: Int) {
-        let movie = movieDatasource.value[index]
-        //     let viewModel = MovieDetailViewModel(movie)
-        //    delegate?.navigate(to: .detail(viewModel))
-    }
-    
-    //    func getSectionType(at section: Int) -> SectionType {
-    //        if shouldShowPreviousOrder {
-    //            if section == 0 {
-    //                return .movie
-    //            } else if section == 1 {
-    //                return isLoyaltyCampaignAvailable ? .loyalty : .person
-    //            } else {
-    //                return .person
-    //            }
-    //        } else {
-    //            if section == 0 {
-    //                return isLoyaltyCampaignAvailable ? .loyalty : .menu
-    //            } else {
-    //                return .menu
-    //            }
-    //        }
-    //    }
-    
-    //    var title: Observable<String> {
-    //        Observable<String>.just(movie.title)
-    //    }
-    //
-    //    var description: Observable<String> {
-    //        Observable<String>.just(movie.overview)
-    //    }
-    //
-    //    var poster: Observable<String> {
-    //        Observable<String>.just(movie.posterPath)
-    //    }
-    //
-    //    var releaseDate: Observable<String> {
-    //        Observable<String>.just(movie.releaseDate ?? "")
-    //    }
-    //
-    //    var averageVote: Observable<Double> {
-    //        Observable<Double>.just(movie.voteAverage)
-    //    }
-    
 }
-
-// MARK: - Enums
-extension MovieViewModel {
-    enum SectionType {
-        case movie
-        case person
-    }
-}
-

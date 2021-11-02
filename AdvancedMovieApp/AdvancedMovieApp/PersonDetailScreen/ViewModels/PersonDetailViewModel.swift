@@ -9,20 +9,31 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-final class PersonDetailViewModel {
+protocol PersonDetailViewModelProtocol {
+    var id: Int { get set }
+    var personIdDatasource: BehaviorRelay<Int?> { get set }
+    var personDetailsDatasource: BehaviorRelay<Person?> { get set }
+    var personMovieDatasource: BehaviorRelay<[Movie?]> { get set }
+    var isLoading: BehaviorRelay<Bool> { get set }
+    var navigateToDetailReady: BehaviorRelay<MovieDetailViewModel?> { get set }
+    func getPersonDetails(personId: Int)
+    func getPersonMovieCredits(personId: Int)
+    func navigateToDetail(movie: Movie)
+}
+
+final class PersonDetailViewModel: PersonDetailViewModelProtocol {
     
     // MARK: - Properties
-    var isLoading = BehaviorRelay<Bool>(value: false)
-    private(set) var personIdDatasource = BehaviorRelay<Int?>(value: nil)
-    private(set) var personDetailsDatasource = BehaviorRelay<Person?>(value: nil)
-    private(set) var personMovieDatasource = BehaviorRelay<[Movie]>(value: [])
-    private(set) var bag = DisposeBag()
+    private var bag = DisposeBag()
+    
     var id: Int = 0
+    var isLoading = BehaviorRelay<Bool>(value: false)
+    var personIdDatasource = BehaviorRelay<Int?>(value: nil)
+    var personDetailsDatasource = BehaviorRelay<Person?>(value: nil)
+    var personMovieDatasource = BehaviorRelay<[Movie?]>(value: [nil])
+    var navigateToDetailReady = BehaviorRelay<MovieDetailViewModel?>(value: nil)
     
-    func updateLoading(){
-        isLoading.accept(false)
-    }
-    
+    //MARK: - Public Methods
     func getPersonDetails(personId: Int) {
         Observable.just((id))
             .do(onNext: { [isLoading] _ in isLoading.accept(true) })
@@ -33,8 +44,6 @@ final class PersonDetailViewModel {
             .subscribe(onNext: { [weak self] personDetailsResponse in
                 let personDetails = personDetailsResponse
                 self?.updatePersonDetailsDatasource(with: personDetails)
-                
-                print(self?.personDetailsDatasource.value as Any)
             })
             .disposed(by: bag)
     }
@@ -50,18 +59,24 @@ final class PersonDetailViewModel {
                 let personMovieCredits = personMovieCreditsResponse.cast
                 self?.updatePersonMovieDatasource(with: personMovieCredits)
                 
-                print(self?.personMovieDatasource.value as Any)
+                //  print(self?.personMovieDatasource.value as Any)
             })
             .disposed(by: bag)
+    }
+    
+    func navigateToDetail(movie: Movie) {
+        let detailViewModel = MovieDetailViewModel()
+        detailViewModel.movieDetailDatasource.accept(movie)
+        navigateToDetailReady.accept(detailViewModel)
     }
 }
 //MARK: - Helper Methods
 extension PersonDetailViewModel {
-    func updatePersonDetailsDatasource(with personDetails: Person) {
+    func updatePersonDetailsDatasource(with personDetails: Person?) {
         self.personDetailsDatasource.accept(personDetails)
     }
     
-    func updatePersonMovieDatasource(with personMovieCredits: [Movie]) {
+    func updatePersonMovieDatasource(with personMovieCredits: [Movie?]) {
         self.personMovieDatasource.accept(personMovieCredits)
     }
 }

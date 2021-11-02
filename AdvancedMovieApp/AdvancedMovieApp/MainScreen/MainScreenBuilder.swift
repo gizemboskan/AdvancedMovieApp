@@ -9,7 +9,10 @@ import UIKit
 
 final class MainScreenBuilder {
     
-    static func make() -> MainPageViewController {
-        MainPageViewController()
+    static func make(with viewModel: MovieViewModel) ->
+    MainPageViewController {
+        let viewController = MainPageViewController()
+        viewController.viewModel = viewModel
+        return viewController
     }
 }
