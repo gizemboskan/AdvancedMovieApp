@@ -109,12 +109,12 @@ extension PersonDetailViewController: UICollectionViewDelegate, UICollectionView
 // MARK: - Person detail
 private extension PersonDetailViewController {
     func presentMovieDetail(with model: Movie?) {
-      guard let viewController = MovieDetailViewController() as? MovieDetailViewController else {
-        assertionFailure("MovieDetailViewController not found")
-        return
-      }
-      viewController.viewmodel.movieDetailDatasource.accept(model)
-      navigationController?.pushViewController(viewController, animated: true)
+        guard let viewController = MovieDetailViewController() as? MovieDetailViewController else {
+            assertionFailure("MovieDetailViewController not found")
+            return
+        }
+        viewController.viewmodel.movieDetailDatasource.accept(model)
+        navigationController?.pushViewController(viewController, animated: true)
     }
 }
 

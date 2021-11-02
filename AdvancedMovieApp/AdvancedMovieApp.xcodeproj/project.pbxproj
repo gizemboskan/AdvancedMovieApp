@@ -36,6 +36,8 @@
 		7A0B8EDA272FE6EF00444636 /* LoadingDisplayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0B8ED9272FE6EF00444636 /* LoadingDisplayer.swift */; };
 		7A0B8EDC272FED2800444636 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0B8EDB272FED2800444636 /* UIViewController+Extensions.swift */; };
 		7A0B8EDF2730050E00444636 /* MainScreenApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0B8EDE2730050E00444636 /* MainScreenApi.swift */; };
+		7A0B8EE627312C5300444636 /* UIButton+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0B8EE527312C5300444636 /* UIButton+Extension.swift */; };
+		7A0B8EE827312F0600444636 /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0B8EE727312F0600444636 /* Video.swift */; };
 		7AFC31B42728111E00A8315F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AFC31B32728111E00A8315F /* AppDelegate.swift */; };
 		7AFC31B62728111E00A8315F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AFC31B52728111E00A8315F /* SceneDelegate.swift */; };
 		7AFC31B82728111E00A8315F /* MainPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AFC31B72728111E00A8315F /* MainPageViewController.swift */; };
@@ -105,6 +107,8 @@
 		7A0B8ED9272FE6EF00444636 /* LoadingDisplayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingDisplayer.swift; sourceTree = "<group>"; };
 		7A0B8EDB272FED2800444636 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		7A0B8EDE2730050E00444636 /* MainScreenApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenApi.swift; sourceTree = "<group>"; };
+		7A0B8EE527312C5300444636 /* UIButton+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Extension.swift"; sourceTree = "<group>"; };
+		7A0B8EE727312F0600444636 /* Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
 		7AFC31B02728111E00A8315F /* AdvancedMovieApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdvancedMovieApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AFC31B32728111E00A8315F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFC31B52728111E00A8315F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -164,6 +168,7 @@
 			isa = PBXGroup;
 			children = (
 				7A0B8E922729FABF00444636 /* UITableView+Extension.swift */,
+				7A0B8EE527312C5300444636 /* UIButton+Extension.swift */,
 				7A0B8EA7272AAEA000444636 /* NSObject+Extensions.swift */,
 				7A0B8EA9272AAF1100444636 /* UIView+Extensions.swift */,
 				7A0B8EAB272AB8EA00444636 /* Optional+Extensions.swift */,
@@ -408,6 +413,7 @@
 				7AFC321227284BB000A8315F /* CastResults.swift */,
 				7AFC3216272895AD00A8315F /* Person.swift */,
 				7A0B8ED3272EF4DF00444636 /* PersonCastResults.swift */,
+				7A0B8EE727312F0600444636 /* Video.swift */,
 			);
 			name = DTOs;
 			sourceTree = "<group>";
@@ -430,9 +436,6 @@
 				7A0B8E96272AABCB00444636 /* PersonDetailScreen */,
 				7A0B8E912729FAA200444636 /* Extensions */,
 				7A0B8EBD272AF13200444636 /* CustomViews */,
-				7AFC32092728196E00A8315F /* ViewModels */,
-				7AFC320B2728199F00A8315F /* ViewControllers */,
-				7AFC320A2728197B00A8315F /* Cells */,
 			);
 			name = Scenes;
 			sourceTree = "<group>";
@@ -444,27 +447,6 @@
 				7AFC3203272813C700A8315F /* URLRequest+Extensions.swift */,
 			);
 			path = Extensions;
-			sourceTree = "<group>";
-		};
-		7AFC32092728196E00A8315F /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = ViewModels;
-			sourceTree = "<group>";
-		};
-		7AFC320A2728197B00A8315F /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Cells;
-			sourceTree = "<group>";
-		};
-		7AFC320B2728199F00A8315F /* ViewControllers */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = ViewControllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -609,6 +591,7 @@
 				7AFC3217272895AD00A8315F /* Person.swift in Sources */,
 				7A0B8ED0272ECD7400444636 /* PersonDetailCollectionViewCell.swift in Sources */,
 				7AFC321327284BB000A8315F /* CastResults.swift in Sources */,
+				7A0B8EE627312C5300444636 /* UIButton+Extension.swift in Sources */,
 				7A0B8EAA272AAF1100444636 /* UIView+Extensions.swift in Sources */,
 				7A0B8EAC272AB8EA00444636 /* Optional+Extensions.swift in Sources */,
 				7A0B8E932729FABF00444636 /* UITableView+Extension.swift in Sources */,
@@ -634,6 +617,7 @@
 				7A0B8EBF272AF14F00444636 /* SearchBar.swift in Sources */,
 				7AFC3204272813C700A8315F /* URLRequest+Extensions.swift in Sources */,
 				7A0B8EC4272C8ED700444636 /* MovieTrailerView.swift in Sources */,
+				7A0B8EE827312F0600444636 /* Video.swift in Sources */,
 				7A0B8ECE272DA2BA00444636 /* PersonDetailViewModel.swift in Sources */,
 				7A0B8E892729D38F00444636 /* MovieDetailViewController.swift in Sources */,
 				7AFC31EC272811D200A8315F /* AppRouter.swift in Sources */,
