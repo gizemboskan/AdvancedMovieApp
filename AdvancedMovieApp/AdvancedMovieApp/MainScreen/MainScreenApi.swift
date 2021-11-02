@@ -8,15 +8,18 @@
 import Foundation
 import RxSwift
 
-//protocol MainScreenApi {
-//    
-//}
-//
-//extension MainScreenApi {
-//    
-//    func getMovieList(pageNumber: Int) -> Observable<MovieResults> {
-//        let url = URL.getPopularMovies(page: pageNumber)
-//        let request = URLRequest.load(resource: Resource<MovieResults>(url: url!))
-//        return request
-//    }
-//}
+protocol MainScreenApi {
+    
+}
+
+extension MainScreenApi {
+    func getMovieList(pageNumber: Int) -> Observable<MovieResults> {
+        guard let url = URL.getPopularMovies(page: pageNumber) else { return .empty() }
+        return URLRequest.load(resource: Resource<MovieResults>(url: url))
+    }
+    
+    func searchMovie(movie: String) -> Observable<MovieResults> {
+        guard let url = URL.searchMovie(query: movie) else { return .empty() }
+        return URLRequest.load(resource: Resource<MovieResults>(url: url))
+    }
+}
