@@ -9,16 +9,16 @@ import Foundation
 
 // MARK: - Person
 struct Person: Decodable {
-    let birthday, knownForDepartment: String
+    let birthday, knownForDepartment: String?
     let id: Int
-    let name: String
-    let alsoKnownAs: [String]
-    let gender: Int
-    let biography: String
-    let popularity: Double
-    let placeOfBirth, profilePath: String
-    let adult: Bool
-    let imdbID: String
+    let name: String?
+    let alsoKnownAs: [String?]
+    let gender: Int?
+    let biography: String?
+    let popularity: Double?
+    let placeOfBirth, profilePath: String?
+    let adult: Bool?
+    let imdbID: String?
     
     enum CodingKeys: String, CodingKey {
         case birthday

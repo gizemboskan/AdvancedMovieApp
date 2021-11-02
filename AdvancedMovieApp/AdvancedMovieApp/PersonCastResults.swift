@@ -9,6 +9,6 @@ import Foundation
 
 // MARK: - PersonCastResults
 struct PersonCastResults: Decodable {
-    let cast, crew: [Movie]
+    let cast, crew: [Movie?]
     let id: Int
 }
