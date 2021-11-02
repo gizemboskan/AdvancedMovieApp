@@ -95,9 +95,19 @@ private extension MovieListTableViewCell {
 
 extension MovieListTableViewCell {
     func populateUI(movieImageViewURL: URL?, foregroundPosterImageViewURL: URL?, movieTitle: String, releaseDate: String, averageVote: Double){
-        guard let movieImageViewURL = movieImageViewURL else { return }
-        movieImage.kf.setImage(with: movieImageViewURL)
-        foregroundPosterImageView.kf.setImage(with: foregroundPosterImageViewURL)
+        
+        if let movieImageViewURL = movieImageViewURL {
+            movieImage.kf.setImage(with: movieImageViewURL)
+        } else{
+            movieImage.image = UIImage(named: "movie")
+        }
+        
+        if let foregroundPosterImageViewURL = foregroundPosterImageViewURL {
+            foregroundPosterImageView.kf.setImage(with: foregroundPosterImageViewURL)
+        } else {
+            foregroundPosterImageView.image = UIImage(named: "movie")
+        }
+        
         movieTitleLabel.text = movieTitle
         movieReleaseDateLabel.text = releaseDate
         movieAverageVoteLabel.text = String(averageVote)

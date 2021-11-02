@@ -122,8 +122,7 @@ final class PersonDetailView: UIView {
     
     private lazy var flowLayout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: 180,
-                                 height: 180)
+        layout.itemSize = CGSize(width: 180, height: 180)
         layout.minimumInteritemSpacing = 8.0
         layout.sectionInset = UIEdgeInsets(top: 0, left: 4.0, bottom: 0, right: 4.0)
         layout.scrollDirection = .horizontal
@@ -192,9 +191,18 @@ extension PersonDetailView {
     func populateUI(posterImageViewURL: URL?, foregroundPosterImageViewURL: URL?, personName: String,
                     birthday: String, placebirth: String, biography: String){
         
-        guard let posterImageViewURL = posterImageViewURL else { return }
-        posterImageView.kf.setImage(with: posterImageViewURL)
-        foregroundPosterImageView.kf.setImage(with: foregroundPosterImageViewURL)
+        if let posterImageViewURL = posterImageViewURL {
+            posterImageView.kf.setImage(with: posterImageViewURL)
+        } else{
+            posterImageView.image = UIImage(named: "person")
+        }
+        
+        if let foregroundPosterImageViewURL = foregroundPosterImageViewURL {
+            foregroundPosterImageView.kf.setImage(with: foregroundPosterImageViewURL)
+        } else {
+            foregroundPosterImageView.image = UIImage(named: "person")
+        }
+        
         personNameLabel.text = personName
         birthdayInputLabel.text = birthday
         placebirthInputLabel.text = placebirth

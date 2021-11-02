@@ -69,8 +69,12 @@ private extension MovieDetailCollectionViewCell {
 // MARK: - Helpers
 extension MovieDetailCollectionViewCell {
     func populateUI(castMemberImageViewURL: URL?, castMemberCategory: String, castMemberName: String){
-        guard let castMemberImageViewURL = castMemberImageViewURL else { return }
-        castMemberImageView.kf.setImage(with: castMemberImageViewURL)
+        
+        if let castMemberImageViewURL = castMemberImageViewURL {
+            castMemberImageView.kf.setImage(with: castMemberImageViewURL)
+        } else {
+            castMemberImageView.image = UIImage(named: "person")
+        }
         castMemberCategoryLabel.text = castMemberCategory
         castMemberNameLabel.text = castMemberName
         invalidateIntrinsicContentSize()

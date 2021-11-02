@@ -23,7 +23,7 @@ final class PersonDetailCollectionViewCell: UICollectionViewCell {
     
     private lazy var movieNameLabel: UILabel = {
         let movieNameLabel = UILabel.create(numberOfLines: 2, font: .systemFont(ofSize: 14.0, weight: .semibold), textColor: .darkGray, textAlignment: .center)
-        movieNameLabel.sizeAnchor(height: 20)
+        movieNameLabel.sizeAnchor(width: 180, height: 20)
         movieNameLabel.lineBreakMode = .byWordWrapping
         return movieNameLabel
     }()
@@ -34,13 +34,13 @@ final class PersonDetailCollectionViewCell: UICollectionViewCell {
                                               font: .systemFont(ofSize: 12.0,
                                                                 weight: .semibold),
                                               textColor: .darkGray, textAlignment: .center)
-        releaseDateLabel.sizeAnchor(height: 20)
+        releaseDateLabel.sizeAnchor(width: 180, height: 20)
         return releaseDateLabel
     }()
     private lazy var releaseDateStackView: UIStackView = .create(arrangedSubViews: [releaseDateFixedLabel, releaseDateLabel], spacing: 2)
     
     // MARK: - All View
-    private lazy var allStackView: UIStackView = .create(arrangedSubViews: [movieImageView, movieNameLabel, releaseDateStackView], distribution: .equalSpacing, spacing: 4)
+    private lazy var allStackView: UIStackView = .create(arrangedSubViews: [movieImageView, movieNameLabel, releaseDateStackView], distribution: .equalSpacing, spacing: 10)
     
     // MARK: - Initialization
     override private init(frame: CGRect) {
@@ -65,8 +65,12 @@ private extension PersonDetailCollectionViewCell {
 // MARK: - Helpers
 extension PersonDetailCollectionViewCell {
     func populateUI(movieImageViewURL: URL?, movieName: String, releaseDate: String){
-        guard let movieImageViewURL = movieImageViewURL else { return }
-        movieImageView.kf.setImage(with: movieImageViewURL)
+        
+        if let movieImageViewURL = movieImageViewURL {
+            movieImageView.kf.setImage(with: movieImageViewURL)
+        } else {
+            movieImageView.image = UIImage(named: "movie")
+        }
         movieNameLabel.text = movieName
         releaseDateLabel.text = releaseDate
         invalidateIntrinsicContentSize()

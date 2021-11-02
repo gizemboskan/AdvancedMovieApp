@@ -129,10 +129,10 @@ final class MovieDetailView: UIView {
     // MARK: - movieTrailerButton
     lazy var movieTrailerButton: UIButton = {
         let button = UIButton.create(title: "Watch Trailer in YouTube", titleColor: .white, backgroundColor: .darkRed, font: .systemFont(ofSize: 16.0, weight: .bold))
-        button.sizeAnchor(width: 10, height: 40)
+        button.sizeAnchor(width: 100, height: 40)
         return button
     }()
-    private lazy var movieTrailerButtonStackView: UIStackView = .create(arrangedSubViews: [movieTrailerButton])
+    private lazy var movieTrailerButtonStackView: UIStackView = .create(arrangedSubViews: [movieTrailerButton], distribution: .equalSpacing)
     
     // MARK: - allStackView
     // TODO Question why distribution didn't work properly when I set it to fill?
@@ -189,14 +189,25 @@ private extension MovieDetailView {
 extension MovieDetailView {
     func populateUI(posterImageViewURL: URL?, foregroundPosterImageViewURL: URL?, movieTitle: String,
                     releaseDate: String, rating: Double, movieDescription: String){
-        guard let posterImageViewURL = posterImageViewURL else { return }
-        posterImageView.kf.setImage(with: posterImageViewURL)
-        foregroundPosterImageView.kf.setImage(with: foregroundPosterImageViewURL)
+        if let posterImageViewURL = posterImageViewURL {
+            
+            posterImageView.kf.setImage(with: posterImageViewURL)
+        } else{
+            posterImageView.image = UIImage(named: "person")
+        }
+        
+        if let foregroundPosterImageViewURL = foregroundPosterImageViewURL {
+            foregroundPosterImageView.kf.setImage(with: foregroundPosterImageViewURL)
+        } else {
+            foregroundPosterImageView.image = UIImage(named: "person")
+        }
+        
         movieTitleLabel.text = movieTitle
         releaseDateLabel.text = releaseDate
         ratingLabel.text = String(rating)
         movieDescriptionLabel.text = movieDescription
-        //   movieTrailerButton.sendAction(URL.getVideos(id: <#T##Int#>))
+        //        movieTrailerButton.addAction(UIAction(handler: <#T##UIActionHandler##UIActionHandler##(UIAction) -> Void#>), for: .touchUpInside)
+        //movieTrailerButton.sendAction(URL.getVideos(id: <#T##Int#>))
         invalidateIntrinsicContentSize()
     }
 }
