@@ -27,7 +27,7 @@ extension UIViewController {
     }
     
     static let activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
-
+    
     func startLoading() {
         let activityIndicator = UIViewController.activityIndicator
         activityIndicator.center = self.view.center
@@ -39,7 +39,7 @@ extension UIViewController {
         }
         activityIndicator.startAnimating()
     }
-
+    
     func stopLoading() {
         let activityIndicator = UIViewController.activityIndicator
         DispatchQueue.main.async {
@@ -47,5 +47,5 @@ extension UIViewController {
             activityIndicator.stopAnimating()
             activityIndicator.removeFromSuperview()
         }
-      }
+    }
 }
