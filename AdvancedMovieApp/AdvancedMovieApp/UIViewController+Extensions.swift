@@ -26,18 +26,27 @@ extension UIViewController {
         self.present(ac, animated: true)
     }
     
-    static let activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
+    private static let activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
     
     func startLoading() {
-        let activityIndicator = UIViewController.activityIndicator
-        activityIndicator.center = self.view.center
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.style = UIActivityIndicatorView.Style.large
+
         DispatchQueue.main.async {
+            let activityIndicator = UIViewController.activityIndicator
+            activityIndicator.center = self.view.center
+            activityIndicator.hidesWhenStopped = true
+            activityIndicator.style = UIActivityIndicatorView.Style.large
+            activityIndicator.color = .black
+            activityIndicator.translatesAutoresizingMaskIntoConstraints = false
             self.view.addSubview(activityIndicator)
+            NSLayoutConstraint.activate([
+                activityIndicator.widthAnchor.constraint(equalToConstant: 80),
+                activityIndicator.heightAnchor.constraint(equalToConstant: 80),
+                activityIndicator.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+                activityIndicator.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
+            ])
             self.view.isUserInteractionEnabled = false
+            activityIndicator.startAnimating()
         }
-        activityIndicator.startAnimating()
     }
     
     func stopLoading() {
