@@ -99,6 +99,18 @@ final class PersonDetailView: UIView {
     }()
     private lazy var biographyStackView: UIStackView = .create(arrangedSubViews: [biographyLabel])
     
+    // MARK: - moviesCollectionViewLabel
+    private lazy var moviesCollectionViewLabel: UILabel = {
+        let moviesCollectionViewLabel = UILabel.create(text: "Played Movies", font: .systemFont(ofSize: 16.0,
+                                                                                                weight: .bold),
+                                                       textColor: .white, textAlignment: .left)
+        moviesCollectionViewLabel.sizeToFit()
+        moviesCollectionViewLabel.fillSuperview(with: UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8))
+        return moviesCollectionViewLabel
+    }()
+    private lazy var moviesCollectionViewLabelStackView: UIStackView = .create(arrangedSubViews:
+                                                                                [moviesCollectionViewLabel])
+    
     // MARK: - moviesCollectionView
     lazy var moviesCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
@@ -123,8 +135,10 @@ final class PersonDetailView: UIView {
                                                                             .createSeparator(with: .horizontal,
                                                                                              backgroundColor: .lightGray),
                                                                             biographyStackView,
+                                                                            .createSeparator(with: .horizontal,
+                                                                                             backgroundColor: .white),
+                                                                            moviesCollectionViewLabelStackView,
                                                                             moviesCollectionView],
-                                                         alignment: .center,
                                                          distribution: .equalSpacing, spacing: 12)
     
     // MARK: - Initilizations

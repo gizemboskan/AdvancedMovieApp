@@ -89,6 +89,15 @@ final class MovieDetailView: UIView {
     }()
     private lazy var descriptionStackView: UIStackView = .create(arrangedSubViews: [movieDescriptionLabel])
     
+    // MARK: - castCollectionViewLabel
+    private lazy var castCollectionViewLabel: UILabel = {
+        let castCollectionViewLabel = UILabel.create(text: "Movie Cast", font: .systemFont(ofSize: 16.0, weight: .bold), textColor: .white, textAlignment: .left)
+        castCollectionViewLabel.sizeToFit()
+        castCollectionViewLabel.fillSuperview(with: UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8))
+        return castCollectionViewLabel
+    }()
+    private lazy var castCollectionViewLabelStackView: UIStackView = .create(arrangedSubViews: [castCollectionViewLabel])
+    
     // MARK: - castCollectionView
     lazy var castCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
@@ -108,14 +117,26 @@ final class MovieDetailView: UIView {
         return layout
     }()
     
-    // MARK: - BottomView - video
+    // MARK: - movieTrailerLabel
+    private lazy var movieTrailerLabel: UILabel = {
+        let movieTrailerLabel = UILabel.create(text: "Movie Trailer", font: .systemFont(ofSize: 16.0, weight: .bold), textColor: .white, textAlignment: .left)
+        movieTrailerLabel.sizeToFit()
+        movieTrailerLabel.fillSuperview(with: UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8))
+        return movieTrailerLabel
+    }()
+    private lazy var movieTrailerLabelStackView: UIStackView = .create(arrangedSubViews: [movieTrailerLabel])
     
-    // TODO:
-    
+    // MARK: - movieTrailerButton
+    lazy var movieTrailerButton: UIButton = {
+        let button = UIButton.create(title: "Watch Trailer in YouTube", titleColor: .white, backgroundColor: .darkRed, font: .systemFont(ofSize: 16.0, weight: .bold))
+        button.sizeAnchor(width: 10, height: 40)
+        return button
+    }()
+    private lazy var movieTrailerButtonStackView: UIStackView = .create(arrangedSubViews: [movieTrailerButton])
     
     // MARK: - allStackView
     // TODO Question why distribution didn't work properly when I set it to fill?
-    private lazy var allStackView: UIStackView = .create(arrangedSubViews: [topView, midView, .createSeparator(with: .horizontal, backgroundColor: .lightGray), descriptionStackView, castCollectionView], alignment: .center, distribution: .equalSpacing, spacing: 12)
+    private lazy var allStackView: UIStackView = .create(arrangedSubViews: [topView, midView, .createSeparator(with: .horizontal, backgroundColor: .lightGray), descriptionStackView, .createSeparator(with: .horizontal, backgroundColor: .white), castCollectionViewLabelStackView, castCollectionView, .createSeparator(with: .horizontal, backgroundColor: .white), movieTrailerLabelStackView, movieTrailerButtonStackView], distribution: .equalSpacing, spacing: 12)
     
     // MARK: - Initilizations
     init() {
@@ -175,6 +196,7 @@ extension MovieDetailView {
         releaseDateLabel.text = releaseDate
         ratingLabel.text = String(rating)
         movieDescriptionLabel.text = movieDescription
+        //   movieTrailerButton.sendAction(URL.getVideos(id: <#T##Int#>))
         invalidateIntrinsicContentSize()
     }
 }

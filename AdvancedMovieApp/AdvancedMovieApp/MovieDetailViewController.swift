@@ -49,14 +49,27 @@ extension MovieDetailViewController {
             .subscribe(onNext: { [weak self] data in
                 guard let self = self,
                       let movie = self.viewmodel.movieDetailDatasource.value else { return }
+                //     let video = self.viewmodel.movieVideoDatasource.value else { return }
                 self.observeUI(with: movie)
                 self.viewmodel.getMovieCredits(movieId: movie.id)
+                // self.observeMovieURL(with: video)
+                
             }).disposed(by: bag)
         viewmodel.movieCreditsDatasource.subscribe(onNext: { [weak self] data in
             guard let self = self else { return }
             print(data.count)
             self.movieDetailView.castCollectionView.reloadData()
         }).disposed(by: bag)
+        
+        //        movieDetailView.movieTrailerButton.rx.tap
+        //            .subscribe(onNext: { [weak self] data in
+        //                guard let self = self else { return }
+        //                let movieVideoURL = self.viewmodel.movieVideoDatasource.value?.deepLinkURL
+        //                // OPEN URL!
+        //                let application = UIApplication.shared
+        //                application.open(((movieVideoURL ?? URL(string: "www.google.com"))!))
+        //            })
+        //            .disposed(by: bag)
     }
     
     func observeUI(with movie: Movie?) {
@@ -71,6 +84,11 @@ extension MovieDetailViewController {
         let rating = movie?.voteAverage ?? 0.0
         let movieDescription = movie?.overview ?? ""
         view.populateUI(posterImageViewURL: posterImageViewURL, foregroundPosterImageViewURL: foregroundPosterImageViewURL, movieTitle: movieTitle ?? "", releaseDate: releaseDate ?? "", rating: rating, movieDescription: movieDescription)
+    }
+    
+    func observeMovieURL(with movieVideo: Video?) {
+        let movieVideoURL = movieVideo?.deepLinkURL
+        
     }
 }
 // MARK: - UICollectionViewDataSource

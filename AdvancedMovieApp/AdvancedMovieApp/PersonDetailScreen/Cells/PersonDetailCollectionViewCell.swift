@@ -21,24 +21,26 @@ final class PersonDetailCollectionViewCell: UICollectionViewCell {
         return movieImageView
     }()
     
-   
     private lazy var movieNameLabel: UILabel = {
         let movieNameLabel = UILabel.create(numberOfLines: 2, font: .systemFont(ofSize: 14.0, weight: .semibold), textColor: .darkGray, textAlignment: .center)
-        movieNameLabel.sizeAnchor(height: 25)
+        movieNameLabel.sizeAnchor(height: 20)
+        movieNameLabel.lineBreakMode = .byWordWrapping
         return movieNameLabel
     }()
-   
+    
+    private lazy var releaseDateFixedLabel: UILabel = .create(text: "Release Date:", font: .systemFont(ofSize: 12.0), textColor: .darkOrange, textAlignment: .center)
     private lazy var releaseDateLabel: UILabel = {
         let releaseDateLabel = UILabel.create(numberOfLines: 2,
                                               font: .systemFont(ofSize: 12.0,
                                                                 weight: .semibold),
                                               textColor: .darkGray, textAlignment: .center)
-        releaseDateLabel.sizeAnchor(height: 25)
+        releaseDateLabel.sizeAnchor(height: 20)
         return releaseDateLabel
     }()
+    private lazy var releaseDateStackView: UIStackView = .create(arrangedSubViews: [releaseDateFixedLabel, releaseDateLabel], spacing: 2)
     
     // MARK: - All View
-    private lazy var allStackView: UIStackView = .create(arrangedSubViews: [movieImageView, movieNameLabel, releaseDateLabel], distribution: .equalSpacing, spacing: 4)
+    private lazy var allStackView: UIStackView = .create(arrangedSubViews: [movieImageView, movieNameLabel, releaseDateStackView], distribution: .equalSpacing, spacing: 4)
     
     // MARK: - Initialization
     override private init(frame: CGRect) {

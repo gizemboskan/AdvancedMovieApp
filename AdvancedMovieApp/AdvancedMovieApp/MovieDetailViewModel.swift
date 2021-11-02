@@ -16,9 +16,16 @@ final class MovieDetailViewModel {
     private(set) var movieDetailDatasource = BehaviorRelay<Movie?>(value: nil)
     private(set) var movieIdDetailDatasource = BehaviorRelay<Int?>(value: nil)
     private(set) var movieCreditsDatasource = BehaviorRelay<[Cast]>(value: [])
+    private(set) var movieVideoDatasource = BehaviorRelay<Video?>(value: nil)
     private(set) var bag = DisposeBag()
     var id: Int = 0
     
+    init() {
+        movieVideoDatasource
+            .asObservable()
+        
+        updateLoading()
+    }
     func updateLoading(){
         isLoading.accept(false)
     }
@@ -38,7 +45,22 @@ final class MovieDetailViewModel {
                 print(self?.movieCreditsDatasource.value as Any)
             })
             .disposed(by: bag)
+        
+        Observable.just((id))
+            .do(onNext: { [isLoading] _ in isLoading.accept(true) })
+        guard let url = URL.getVideos(id: movieId) else { return }
+        URLRequest.load(resource: Resource<Video>(url: url))
+            .observe(on: MainScheduler.instance)
+            .do(onDispose: { [isLoading] in isLoading.accept(false) })
+            .subscribe(onNext: { [weak self] movieVideoResponse in
+                let movieVideo = movieVideoResponse
+                self?.updatemovieVideoDatasource(with: movieVideo)
+                print(self?.movieVideoDatasource.value as Any)
+            })
+            .disposed(by: bag)
     }
+    
+    
 }
 
 //MARK: - Helper Methods
@@ -50,6 +72,10 @@ extension MovieDetailViewModel {
     
     func updateMovieDetailDatasource(with movie: Movie) {
         self.movieDetailDatasource.accept(movie)
+    }
+    
+    func updatemovieVideoDatasource(with movieVideo: Video?) {
+        self.movieVideoDatasource.accept(movieVideo)
     }
     
 }
