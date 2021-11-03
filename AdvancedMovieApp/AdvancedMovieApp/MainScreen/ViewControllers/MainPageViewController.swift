@@ -33,6 +33,10 @@ final class MainPageViewController: UIViewController{
         loadMoreMovies()
         mainScreenView.tableView.restore()
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        hideKeyboardWhenTappedAround()
+    }
 }
 
 //  MARK: - Arrange Views
