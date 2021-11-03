@@ -73,6 +73,15 @@ extension PersonDetailViewController {
             })
             .disposed(by: bag)
         
+        viewModel.onError.asObservable()
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] onError in
+                if onError {
+                    self?.showAlertController()
+                }
+            })
+            .disposed(by: bag)
+        
         viewModel.navigateToDetailReady
             .compactMap { $0 }
             .subscribe(onNext: { [weak self] detailViewModel in

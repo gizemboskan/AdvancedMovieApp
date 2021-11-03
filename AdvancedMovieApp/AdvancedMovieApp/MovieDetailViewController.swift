@@ -72,6 +72,15 @@ extension MovieDetailViewController {
             })
             .disposed(by: bag)
         
+        viewModel.onError.asObservable()
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] onError in
+                if onError {
+                    self?.showAlertController()
+                }
+            })
+            .disposed(by: bag)
+        
         movieDetailView.movieTrailerButton.rx.tap
             .subscribe(onNext: { [weak self] data in
                 if let movieVideoURL = viewModel.movieVideoDatasource.value?.results.first?.browserURL,

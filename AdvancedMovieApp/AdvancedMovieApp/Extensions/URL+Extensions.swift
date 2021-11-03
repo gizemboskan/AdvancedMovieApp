@@ -32,7 +32,6 @@ extension URL {
         URL(string: Endpoints.base + "/person/\(person_id)" + Endpoints.apiKeyParam)
     }
     
-    
     static func getMovieCreditsForEachPerson(personId: Int) -> URL? {
         URL(string: Endpoints.base + "/person/\(personId)" + "/movie_credits" +
                 Endpoints.apiKeyParam + "&language=en-US")

@@ -15,6 +15,7 @@ protocol MovieViewModelProtocol {
     var searchedKeyword: BehaviorRelay<String> { get set }
     var isFiltering: BehaviorRelay<Bool> { get set }
     var isLoading: BehaviorRelay<Bool> { get set }
+    var onError: BehaviorRelay<Bool> { get set }
     var navigateToDetailReady: BehaviorRelay<MovieDetailViewModel?> { get set }
     func getMovieList()
     func navigateToDetail(movie: Movie)
@@ -31,6 +32,7 @@ final class MovieViewModel: MovieViewModelProtocol, MainScreenApi {
     var searchedKeyword = BehaviorRelay<String>(value: "")
     var isFiltering = BehaviorRelay<Bool>(value: false)
     var isLoading = BehaviorRelay<Bool>(value: false)
+    var onError = BehaviorRelay<Bool>(value: false)
     var navigateToDetailReady = BehaviorRelay<MovieDetailViewModel?>(value: nil)
     
     // MARK: - Initilizations
@@ -63,6 +65,7 @@ final class MovieViewModel: MovieViewModelProtocol, MainScreenApi {
                 self.getMovieList(pageNumber: pageNumber)
             }
             .observe(on: MainScheduler.instance)
+            .do(onError: { _ in self.onError.accept(true) })
             .do(onDispose: { [isLoading] in isLoading.accept(false) })
             .subscribe(onNext: { [weak self] movieResponse in
                 self?.updateMovieDatasource(with: movieResponse.results)
@@ -90,6 +93,7 @@ extension MovieViewModel {
             }
             .observe(on: MainScheduler.instance)
             .retry(3) // to try the internet connection loss
+            .do(onError: { _ in self.onError.accept(true) })
             .do(onDispose: { [isLoading] in isLoading.accept(false) })
             .subscribe(onNext: { [weak self] movieResponse in
                 self?.updateFilteredMoviesDatasource(with: movieResponse.results)

@@ -29,7 +29,7 @@ extension UIViewController {
     private static let activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
     
     func startLoading() {
-        
+
         DispatchQueue.main.async {
             let activityIndicator = UIViewController.activityIndicator
             activityIndicator.center = self.view.center

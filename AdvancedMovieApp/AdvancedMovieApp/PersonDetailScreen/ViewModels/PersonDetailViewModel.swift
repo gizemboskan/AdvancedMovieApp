@@ -14,6 +14,7 @@ protocol PersonDetailViewModelProtocol {
     var personDetailsDatasource: BehaviorRelay<Person?> { get set }
     var personMovieDatasource: BehaviorRelay<[Movie?]> { get set }
     var isLoading: BehaviorRelay<Bool> { get set }
+    var onError: BehaviorRelay<Bool> { get set }
     var navigateToDetailReady: BehaviorRelay<MovieDetailViewModel?> { get set }
     func getPersonDetails(personId: Int)
     func getPersonMovieCredits(personId: Int)
@@ -26,6 +27,7 @@ final class PersonDetailViewModel: PersonDetailViewModelProtocol, PersonDetailAp
     private var bag = DisposeBag()
     
     var isLoading = BehaviorRelay<Bool>(value: false)
+    var onError = BehaviorRelay<Bool>(value: false)
     var personIdDatasource = BehaviorRelay<Int?>(value: nil)
     var personDetailsDatasource = BehaviorRelay<Person?>(value: nil)
     var personMovieDatasource = BehaviorRelay<[Movie?]>(value: [nil])
@@ -39,6 +41,7 @@ final class PersonDetailViewModel: PersonDetailViewModelProtocol, PersonDetailAp
                 self.getPersonDetails(personId: personId)
             }
             .observe(on: MainScheduler.instance)
+            .do(onError: { _ in self.onError.accept(true) })
             .do(onDispose: { [isLoading] in isLoading.accept(false) })
             .subscribe(onNext: { [weak self] personDetailsResponse in
                 self?.updatePersonDetailsDatasource(with: personDetailsResponse)
@@ -53,6 +56,7 @@ final class PersonDetailViewModel: PersonDetailViewModelProtocol, PersonDetailAp
                 self.getPersonMovieCredits(personId: personId)
             }
             .observe(on: MainScheduler.instance)
+            .do(onError: { _ in self.onError.accept(true) })
             .do(onDispose: { [isLoading] in isLoading.accept(false) })
             .subscribe(onNext: { [weak self] personMovieCreditsResponse in
                 self?.updatePersonMovieDatasource(with: personMovieCreditsResponse.cast)

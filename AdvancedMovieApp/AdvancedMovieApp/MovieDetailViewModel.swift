@@ -10,11 +10,11 @@ import RxSwift
 import RxCocoa
 
 protocol MovieDetailViewModelProtocol {
-    var id: Int { get set }
     var movieDetailDatasource: BehaviorRelay<Movie?> { get set }
     var movieCreditsDatasource: BehaviorRelay<[Cast?]> { get set }
     var movieVideoDatasource: BehaviorRelay<VideoResults?> { get set }
     var isLoading: BehaviorRelay<Bool> { get set }
+    var onError: BehaviorRelay<Bool> { get set }
     func getMovieCredits(movieId: Int)
     func getVideos(movieId: Int)
     var navigateToDetailReady: BehaviorRelay<PersonDetailViewModel?> { get set }
@@ -26,8 +26,8 @@ final class MovieDetailViewModel: MovieDetailViewModelProtocol, MovieDetailApi {
     // MARK: - Properties
     private var bag = DisposeBag()
     
-    var id: Int = 0
     var isLoading = BehaviorRelay<Bool>(value: false)
+    var onError = BehaviorRelay<Bool>(value: false)
     var movieDetailDatasource = BehaviorRelay<Movie?>(value: nil)
     var movieCreditsDatasource = BehaviorRelay<[Cast?]>(value: [nil])
     var movieVideoDatasource = BehaviorRelay<VideoResults?>(value: nil)
@@ -43,6 +43,7 @@ final class MovieDetailViewModel: MovieDetailViewModelProtocol, MovieDetailApi {
                 self.getMovieCredits(movieId: movieId)
             }
             .observe(on: MainScheduler.instance)
+            .do(onError: { _ in self.onError.accept(true) })
             .do(onDispose: { [isLoading] in isLoading.accept(false) })
             .subscribe(onNext: { [weak self] movieCreditsResponse in
                 self?.updateMovieCreditsDatasource(with: movieCreditsResponse.cast)
@@ -59,6 +60,7 @@ final class MovieDetailViewModel: MovieDetailViewModelProtocol, MovieDetailApi {
                 self.getVideos(movieId: movieId)
             }
             .observe(on: MainScheduler.instance)
+            .do(onError: { _ in self.onError.accept(true) })
             .do(onDispose: { [isLoading] in isLoading.accept(false) })
             .subscribe(onNext: { [weak self] movieVideoResponse in
                 self?.updatemovieVideoDatasource(with: movieVideoResponse)

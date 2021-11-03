@@ -96,6 +96,26 @@ extension MainPageViewController {
                 self?.navigationController?.pushViewController(detailViewController, animated: true)
             })
             .disposed(by: bag)
+        
+        viewModel.isLoading.asObservable()
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] isLoading in
+                if isLoading {
+                    self?.startLoading()
+                } else {
+                    self?.stopLoading()
+                }
+            })
+            .disposed(by: bag)
+        
+        viewModel.onError.asObservable()
+            .observe(on: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] onError in
+                if onError {
+                    self?.showAlertController()
+                }
+            })
+            .disposed(by: bag)
     }
     
     func loadMoreMovies(){
