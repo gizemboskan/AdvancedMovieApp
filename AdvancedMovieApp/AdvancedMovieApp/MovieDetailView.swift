@@ -53,7 +53,8 @@ final class MovieDetailView: UIView {
     
     // MARK: - midView
     private lazy var movieTitleLabel: UILabel = {
-        let movieTitleLabel = UILabel.create(font: .systemFont(ofSize: 16.0, weight: .semibold), textColor: .darkGray, textAlignment: .center)
+        let movieTitleLabel = UILabel.create(font: .systemFont(ofSize: 16.0, weight: .semibold),
+                                             textColor: .darkGray, textAlignment: .center)
         movieTitleLabel.text = "movie name"
         movieTitleLabel.sizeToFit()
         movieTitleLabel.lineBreakMode = .byTruncatingTail
@@ -61,13 +62,19 @@ final class MovieDetailView: UIView {
     }()
     private lazy var titleStackView: UIStackView = .create(arrangedSubViews: [movieTitleLabel])
     
-    private lazy var releaseDateFixedLabel: UILabel = .create(text: "Release Date:", font: .systemFont(ofSize: 12.0), textColor: .darkOrange, textAlignment: .center)
-    private lazy var releaseDateLabel: UILabel = .create(text: "releaseDateLabel", font: .systemFont(ofSize: 12.0), textColor: .darkGray, textAlignment: .center)
-    private lazy var dateStackView: UIStackView = .create(arrangedSubViews: [releaseDateFixedLabel, releaseDateLabel], spacing: 2)
+    private lazy var releaseDateFixedLabel: UILabel = .create(text: "Release Date:", font: .systemFont(ofSize: 12.0),
+                                                              textColor: .darkOrange, textAlignment: .center)
+    private lazy var releaseDateLabel: UILabel = .create(text: "releaseDateLabel", font: .systemFont(ofSize: 12.0),
+                                                         textColor: .darkGray, textAlignment: .center)
+    private lazy var dateStackView: UIStackView = .create(arrangedSubViews: [releaseDateFixedLabel, releaseDateLabel],
+                                                          spacing: 2)
     
-    private lazy var averageVoteFixedLabel: UILabel = .create(text: "Rating:", font: .systemFont(ofSize: 12.0), textColor: .darkOrange, textAlignment: .center)
-    private lazy var ratingLabel: UILabel = .create(text: "ratingLabel", font: .systemFont(ofSize: 12.0), textColor: .darkGray, textAlignment: .center)
-    private lazy var voteStackView: UIStackView = .create(arrangedSubViews: [averageVoteFixedLabel, ratingLabel], spacing: 2)
+    private lazy var averageVoteFixedLabel: UILabel = .create(text: "Rating:", font: .systemFont(ofSize: 12.0),
+                                                              textColor: .darkOrange, textAlignment: .center)
+    private lazy var ratingLabel: UILabel = .create(text: "ratingLabel", font: .systemFont(ofSize: 12.0),
+                                                    textColor: .darkGray, textAlignment: .center)
+    private lazy var voteStackView: UIStackView = .create(arrangedSubViews: [averageVoteFixedLabel, ratingLabel],
+                                                          spacing: 2)
     
     private lazy var midView: UIView = {
         let view = UIView()
@@ -91,7 +98,8 @@ final class MovieDetailView: UIView {
     
     // MARK: - castCollectionViewLabel
     private lazy var castCollectionViewLabel: UILabel = {
-        let castCollectionViewLabel = UILabel.create(text: "Movie Cast", font: .systemFont(ofSize: 16.0, weight: .bold), textColor: .white, textAlignment: .left)
+        let castCollectionViewLabel = UILabel.create(text: "Movie Cast", font: .systemFont(ofSize: 16.0, weight: .bold),
+                                                     textColor: .white, textAlignment: .left)
         castCollectionViewLabel.sizeToFit()
         castCollectionViewLabel.fillSuperview(with: UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8))
         return castCollectionViewLabel
@@ -119,7 +127,8 @@ final class MovieDetailView: UIView {
     
     // MARK: - movieTrailerLabel
     private lazy var movieTrailerLabel: UILabel = {
-        let movieTrailerLabel = UILabel.create(text: "Movie Trailer", font: .systemFont(ofSize: 16.0, weight: .bold), textColor: .white, textAlignment: .left)
+        let movieTrailerLabel = UILabel.create(text: "Movie Trailer", font: .systemFont(ofSize: 16.0, weight: .bold),
+                                               textColor: .white, textAlignment: .left)
         movieTrailerLabel.sizeToFit()
         movieTrailerLabel.fillSuperview(with: UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8))
         return movieTrailerLabel
@@ -128,15 +137,29 @@ final class MovieDetailView: UIView {
     
     // MARK: - movieTrailerButton
     lazy var movieTrailerButton: UIButton = {
-        let button = UIButton.create(title: "Watch Trailer in YouTube", titleColor: .white, backgroundColor: .darkRed, font: .systemFont(ofSize: 16.0, weight: .bold))
+        let button = UIButton.create(title: "Watch Trailer in YouTube", titleColor: .white, backgroundColor: .darkRed,
+                                     font: .systemFont(ofSize: 16.0, weight: .bold))
         button.sizeAnchor(width: 100, height: 40)
         return button
     }()
-    private lazy var movieTrailerButtonStackView: UIStackView = .create(arrangedSubViews: [movieTrailerButton], distribution: .equalSpacing)
+    private lazy var movieTrailerButtonStackView: UIStackView = .create(arrangedSubViews: [movieTrailerButton],
+                                                                        distribution: .equalSpacing)
     
     // MARK: - allStackView
     // TODO Question why distribution didn't work properly when I set it to fill?
-    private lazy var allStackView: UIStackView = .create(arrangedSubViews: [topView, midView, .createSeparator(with: .horizontal, backgroundColor: .lightGray), descriptionStackView, .createSeparator(with: .horizontal, backgroundColor: .white), castCollectionViewLabelStackView, castCollectionView, .createSeparator(with: .horizontal, backgroundColor: .white), movieTrailerLabelStackView, movieTrailerButtonStackView], distribution: .equalSpacing, spacing: 12)
+    private lazy var allStackView: UIStackView = .create(arrangedSubViews: [topView, midView,
+                                                                            .createSeparator(with: .horizontal,
+                                                                                             backgroundColor: .lightGray),
+                                                                            descriptionStackView,
+                                                                            .createSeparator(with: .horizontal,
+                                                                                             backgroundColor: .white),
+                                                                            castCollectionViewLabelStackView,
+                                                                            castCollectionView,
+                                                                            .createSeparator(with: .horizontal,
+                                                                                             backgroundColor: .white),
+                                                                            movieTrailerLabelStackView,
+                                                                            movieTrailerButtonStackView],
+                                                         distribution: .equalSpacing, spacing: 12)
     
     // MARK: - Initilizations
     init() {
@@ -206,8 +229,6 @@ extension MovieDetailView {
         releaseDateLabel.text = releaseDate
         ratingLabel.text = String(rating)
         movieDescriptionLabel.text = movieDescription
-        //        movieTrailerButton.addAction(UIAction(handler: <#T##UIActionHandler##UIActionHandler##(UIAction) -> Void#>), for: .touchUpInside)
-        //movieTrailerButton.sendAction(URL.getVideos(id: <#T##Int#>))
         invalidateIntrinsicContentSize()
     }
 }

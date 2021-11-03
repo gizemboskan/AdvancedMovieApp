@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+
 extension UIColor {
     static let spotifyGreen = UIColor(red: 28/255, green: 184/255, blue: 89/255, alpha: 1)
     static let darkBlue = UIColor(red: 10/255, green: 132/255, blue: 255/255, alpha: 1)

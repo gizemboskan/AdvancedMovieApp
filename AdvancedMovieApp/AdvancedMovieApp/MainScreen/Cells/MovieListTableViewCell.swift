@@ -43,12 +43,15 @@ final class MovieListTableViewCell: UITableViewCell {
     }()
     
     // MARK: - Bottom View
-    private lazy var releaseDateFixedLabel: UILabel = .create(text: "Release Date:", font: .systemFont(ofSize: 12.0), textColor: .darkOrange, textAlignment: .center)
-    private lazy var movieReleaseDateLabel: UILabel = .create(font: .systemFont(ofSize: 12.0), textColor: .darkGray,textAlignment: .center)
+    private lazy var releaseDateFixedLabel: UILabel = .create(text: "Release Date:", font: .systemFont(ofSize: 12.0),
+                                                              textColor: .darkOrange, textAlignment: .center)
+    private lazy var movieReleaseDateLabel: UILabel = .create(font: .systemFont(ofSize: 12.0), textColor: .darkGray,
+                                                              textAlignment: .center)
     private lazy var dateStackView: UIStackView = .create(arrangedSubViews: [releaseDateFixedLabel, movieReleaseDateLabel])
     
     private lazy var movieTitleLabel: UILabel = {
-        let movieTitleLabel = UILabel.create(font: .systemFont(ofSize: 16.0, weight: .semibold), textColor: .darkGray, textAlignment: .center)
+        let movieTitleLabel = UILabel.create(font: .systemFont(ofSize: 16.0, weight: .semibold), textColor: .darkGray,
+                                             textAlignment: .center)
         movieTitleLabel.text = "movie name"
         movieTitleLabel.sizeToFit()
         movieTitleLabel.lineBreakMode = .byTruncatingTail
@@ -57,20 +60,26 @@ final class MovieListTableViewCell: UITableViewCell {
     
     private lazy var titleStackView: UIStackView = .create(arrangedSubViews: [movieTitleLabel])
     
-    private lazy var averageVoteFixedLabel: UILabel = .create(text: "Rating:", font: .systemFont(ofSize: 12.0), textColor: .darkOrange, textAlignment: .center)
-    private lazy var movieAverageVoteLabel: UILabel = .create(font: .systemFont(ofSize: 12.0), textColor: .darkGray, textAlignment: .center)
+    private lazy var averageVoteFixedLabel: UILabel = .create(text: "Rating:", font: .systemFont(ofSize: 12.0),
+                                                              textColor: .darkOrange, textAlignment: .center)
+    private lazy var movieAverageVoteLabel: UILabel = .create(font: .systemFont(ofSize: 12.0), textColor: .darkGray,
+                                                              textAlignment: .center)
     private lazy var voteStackView: UIStackView = .create(arrangedSubViews: [averageVoteFixedLabel, movieAverageVoteLabel])
     
     private lazy var bottomView: UIView = {
         let view = UIView()
-        let bottomStackView: UIStackView = .create(arrangedSubViews: [dateStackView, titleStackView,voteStackView], axis: .horizontal, alignment: .center, distribution: .fillEqually, spacing: 4.0)
+        let bottomStackView: UIStackView = .create(arrangedSubViews: [dateStackView, titleStackView,voteStackView],
+                                                   axis: .horizontal, alignment: .center, distribution: .fillEqually,
+                                                   spacing: 4.0)
         view.addSubview(bottomStackView)
         bottomStackView.fillSuperview(with: UIEdgeInsets(top: 12.0, left: 12.0, bottom: 12.0, right: 12.0))
         return view
     }()
     
     // MARK: - All View
-    private lazy var allStackView: UIStackView = .create(arrangedSubViews: [topView, .createSeparator(with: .horizontal, backgroundColor: .darkGray),bottomView])
+    private lazy var allStackView: UIStackView = .create(arrangedSubViews: [topView, .createSeparator(with: .horizontal,
+                                                                                                      backgroundColor: .darkGray),
+                                                                            bottomView])
     
     // MARK: - Initilizations
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -94,7 +103,8 @@ private extension MovieListTableViewCell {
 }
 
 extension MovieListTableViewCell {
-    func populateUI(movieImageViewURL: URL?, foregroundPosterImageViewURL: URL?, movieTitle: String, releaseDate: String, averageVote: Double){
+    func populateUI(movieImageViewURL: URL?, foregroundPosterImageViewURL: URL?, movieTitle: String,
+                    releaseDate: String, averageVote: Double){
         
         if let movieImageViewURL = movieImageViewURL {
             movieImage.kf.setImage(with: movieImageViewURL)

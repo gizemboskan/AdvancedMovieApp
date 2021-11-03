@@ -21,7 +21,10 @@ final class MovieDetailCollectionViewCell: UICollectionViewCell {
         return castMemberImageView
     }()
     
-    private lazy var castMemberCategoryFixedLabel: UILabel = .create(text: "Character:", font: .systemFont(ofSize: 12.0), textColor: .darkOrange, textAlignment: .center)
+    private lazy var castMemberCategoryFixedLabel: UILabel = .create(text: "Character:",
+                                                                     font: .systemFont(ofSize: 12.0),
+                                                                     textColor: .darkOrange,
+                                                                     textAlignment: .center)
     private lazy var castMemberCategoryLabel: UILabel = {
         let categoryLabel = UILabel.create(numberOfLines: 2,
                                            font: .systemFont(ofSize: 14.0,
@@ -31,10 +34,13 @@ final class MovieDetailCollectionViewCell: UICollectionViewCell {
         categoryLabel.sizeAnchor(height: 25)
         return categoryLabel
     }()
-    private lazy var castMemberCategoryStackView: UIStackView = .create(arrangedSubViews: [castMemberCategoryFixedLabel, castMemberCategoryLabel], spacing: 2)
+    private lazy var castMemberCategoryStackView: UIStackView = .create(arrangedSubViews: [castMemberCategoryFixedLabel,
+                                                                                           castMemberCategoryLabel],
+                                                                        spacing: 2)
     
     private lazy var castMemberNameLabel: UILabel = {
-        let castMemberNameLabel = UILabel.create(numberOfLines: 2, font: .systemFont(ofSize: 12.0, weight: .semibold),
+        let castMemberNameLabel = UILabel.create(numberOfLines: 2, font: .systemFont(ofSize: 12.0,
+                                                                                     weight: .semibold),
                                                  textColor: .darkGray, textAlignment: .center)
         castMemberNameLabel.sizeAnchor(height: 25)
         return castMemberNameLabel

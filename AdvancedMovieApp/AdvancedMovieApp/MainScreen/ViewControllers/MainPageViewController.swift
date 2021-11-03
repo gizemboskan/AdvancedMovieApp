@@ -137,7 +137,8 @@ extension MainPageViewController: UITableViewDataSource {
         let foregroundPosterImageViewURL = URL.posterImage(posterPath: foregroundPosterPath.orEmpty)
         let releaseDate = movie.releaseDate.orEmpty
         let averageVote = movie.voteAverage ?? .zero
-        cell.populateUI(movieImageViewURL: movieImageViewURL, foregroundPosterImageViewURL: foregroundPosterImageViewURL, movieTitle: movieTitle,
+        cell.populateUI(movieImageViewURL: movieImageViewURL, foregroundPosterImageViewURL: foregroundPosterImageViewURL,
+                        movieTitle: movieTitle,
                         releaseDate: releaseDate, averageVote: averageVote)
         return cell
     }

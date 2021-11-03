@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 import RxCocoa
 
-final class PersonViewModel: ActivityHandler {
+final class PersonViewModel {
     // MARK: - Properties
     private(set) var isLoading = BehaviorRelay<Bool>(value: false)
     var isEditableLoading: Bool = false

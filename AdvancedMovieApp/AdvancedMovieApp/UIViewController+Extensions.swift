@@ -20,7 +20,7 @@ extension UIViewController {
     }
     
     /// Warnings
-    func showAlertController(message: String, title: String){
+    func showAlertController(message: String = "Something went wrong!", title: String = "Error!"){
         let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "OK", style: .cancel))
         self.present(ac, animated: true)
@@ -29,7 +29,7 @@ extension UIViewController {
     private static let activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
     
     func startLoading() {
-
+        
         DispatchQueue.main.async {
             let activityIndicator = UIViewController.activityIndicator
             activityIndicator.center = self.view.center

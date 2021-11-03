@@ -31,6 +31,7 @@ final class PersonDetailViewController: UIViewController {
         observeDataSource()
         personDetailView.moviesCollectionView.reloadData()
         viewModel?.getPersonDetails(personId: viewModel?.personIdDatasource.value ?? 0)
+        
     }
 }
 

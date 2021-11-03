@@ -74,7 +74,8 @@ extension MovieDetailViewController {
         
         movieDetailView.movieTrailerButton.rx.tap
             .subscribe(onNext: { [weak self] data in
-                if let movieVideoURL = viewModel.movieVideoDatasource.value?.results.first?.browserURL, UIApplication.shared.canOpenURL(movieVideoURL) {
+                if let movieVideoURL = viewModel.movieVideoDatasource.value?.results.first?.browserURL,
+                   UIApplication.shared.canOpenURL(movieVideoURL) {
                     UIApplication.shared.open(movieVideoURL)
                 }
             })
@@ -100,7 +101,9 @@ extension MovieDetailViewController {
         let releaseDate = movie?.releaseDate.orEmpty
         let rating = movie?.voteAverage ?? 0.0
         let movieDescription = movie?.overview ?? ""
-        view.populateUI(posterImageViewURL: posterImageViewURL, foregroundPosterImageViewURL: foregroundPosterImageViewURL, movieTitle: movieTitle ?? "", releaseDate: releaseDate ?? "", rating: rating, movieDescription: movieDescription)
+        view.populateUI(posterImageViewURL: posterImageViewURL, foregroundPosterImageViewURL: foregroundPosterImageViewURL,
+                        movieTitle: movieTitle ?? "", releaseDate: releaseDate ?? "", rating: rating,
+                        movieDescription: movieDescription)
     }
 }
 // MARK: - UICollectionViewDataSource
@@ -118,7 +121,8 @@ extension MovieDetailViewController: UICollectionViewDataSource {
         let castMemberImageViewURL = URL.posterImage(posterPath: profilePath.orEmpty)
         let castMemberCategory = movieCredits?.character.orEmpty
         let castMemberName = movieCredits?.originalName
-        cell.populateUI(castMemberImageViewURL: castMemberImageViewURL, castMemberCategory: castMemberCategory.orEmpty, castMemberName: castMemberName.orEmpty)
+        cell.populateUI(castMemberImageViewURL: castMemberImageViewURL, castMemberCategory:
+                            castMemberCategory.orEmpty, castMemberName: castMemberName.orEmpty)
         return cell
     }
 }

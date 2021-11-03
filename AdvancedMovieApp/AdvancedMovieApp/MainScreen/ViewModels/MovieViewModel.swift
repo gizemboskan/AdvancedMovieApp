@@ -10,7 +10,6 @@ import RxSwift
 import RxCocoa
 
 protocol MovieViewModelProtocol {
-    var id: Int { get set }
     var movieDatasource: BehaviorRelay<[Movie]> { get set }
     var filteredMoviesDatasource: BehaviorRelay<[Movie]> { get set }
     var searchedKeyword: BehaviorRelay<String> { get set }
@@ -27,7 +26,6 @@ final class MovieViewModel: MovieViewModelProtocol, MainScreenApi {
     private var currentPage: Int = 1
     private var bag = DisposeBag()
     
-    var id: Int = 0
     var movieDatasource = BehaviorRelay<[Movie]>(value: [])
     var filteredMoviesDatasource = BehaviorRelay<[Movie]>(value: [])
     var searchedKeyword = BehaviorRelay<String>(value: "")
@@ -56,11 +54,10 @@ final class MovieViewModel: MovieViewModelProtocol, MainScreenApi {
             return
         }
         
-        currentPage += 1
-        
         Observable.just((currentPage))
-            .do( onNext: { [isLoading] _ in
-                isLoading.accept(true)
+            .do(onNext: { [weak self] _ in
+                self?.isLoading.accept(true)
+                self?.currentPage += 1
             })
             .flatMap { pageNumber in
                 self.getMovieList(pageNumber: pageNumber)
