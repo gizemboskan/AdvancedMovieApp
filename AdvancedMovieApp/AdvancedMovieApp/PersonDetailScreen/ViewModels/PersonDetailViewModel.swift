@@ -72,11 +72,11 @@ final class PersonDetailViewModel: PersonDetailViewModelProtocol, PersonDetailAp
 }
 //MARK: - Helper Methods
 extension PersonDetailViewModel {
-    func updatePersonDetailsDatasource(with personDetails: Person?) {
+    private func updatePersonDetailsDatasource(with personDetails: Person?) {
         self.personDetailsDatasource.accept(personDetails)
     }
     
-    func updatePersonMovieDatasource(with personMovieCredits: [Movie?]) {
+    private func updatePersonMovieDatasource(with personMovieCredits: [Movie?]) {
         self.personMovieDatasource.accept(personMovieCredits)
     }
 }
