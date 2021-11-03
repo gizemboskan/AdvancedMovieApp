@@ -10,7 +10,6 @@ import RxSwift
 import RxCocoa
 
 protocol PersonDetailViewModelProtocol {
-    var id: Int { get set }
     var personIdDatasource: BehaviorRelay<Int?> { get set }
     var personDetailsDatasource: BehaviorRelay<Person?> { get set }
     var personMovieDatasource: BehaviorRelay<[Movie?]> { get set }
@@ -21,12 +20,11 @@ protocol PersonDetailViewModelProtocol {
     func navigateToDetail(movie: Movie)
 }
 
-final class PersonDetailViewModel: PersonDetailViewModelProtocol {
+final class PersonDetailViewModel: PersonDetailViewModelProtocol, PersonDetailApi {
     
     // MARK: - Properties
     private var bag = DisposeBag()
     
-    var id: Int = 0
     var isLoading = BehaviorRelay<Bool>(value: false)
     var personIdDatasource = BehaviorRelay<Int?>(value: nil)
     var personDetailsDatasource = BehaviorRelay<Person?>(value: nil)
@@ -35,31 +33,29 @@ final class PersonDetailViewModel: PersonDetailViewModelProtocol {
     
     //MARK: - Public Methods
     func getPersonDetails(personId: Int) {
-        Observable.just((id))
+        Observable.just((personId))
             .do(onNext: { [isLoading] _ in isLoading.accept(true) })
-        guard let url = URL.getPersonDetails(person_id: personId) else { return }
-        URLRequest.load(resource: Resource<Person>(url: url))
+            .flatMap { personId in
+                self.getPersonDetails(personId: personId)
+            }
             .observe(on: MainScheduler.instance)
             .do(onDispose: { [isLoading] in isLoading.accept(false) })
             .subscribe(onNext: { [weak self] personDetailsResponse in
-                let personDetails = personDetailsResponse
-                self?.updatePersonDetailsDatasource(with: personDetails)
+                self?.updatePersonDetailsDatasource(with: personDetailsResponse)
             })
             .disposed(by: bag)
     }
     
     func getPersonMovieCredits(personId: Int) {
-        Observable.just((id))
+        Observable.just((personId))
             .do(onNext: { [isLoading] _ in isLoading.accept(true) })
-        guard let url = URL.getMovieCreditsForEachPerson(personId: personId) else { return }
-        URLRequest.load(resource: Resource<PersonCastResults>(url: url))
+            .flatMap { personId in
+                self.getPersonMovieCredits(personId: personId)
+            }
             .observe(on: MainScheduler.instance)
             .do(onDispose: { [isLoading] in isLoading.accept(false) })
             .subscribe(onNext: { [weak self] personMovieCreditsResponse in
-                let personMovieCredits = personMovieCreditsResponse.cast
-                self?.updatePersonMovieDatasource(with: personMovieCredits)
-                
-                //  print(self?.personMovieDatasource.value as Any)
+                self?.updatePersonMovieDatasource(with: personMovieCreditsResponse.cast)
             })
             .disposed(by: bag)
     }
