@@ -104,7 +104,7 @@ private extension MovieListTableViewCell {
 
 extension MovieListTableViewCell {
     func populateUI(movieImageViewURL: URL?, foregroundPosterImageViewURL: URL?, movieTitle: String,
-                    releaseDate: String, averageVote: Double){
+                    releaseDate: String?, averageVote: Double?){
         
         if let movieImageViewURL = movieImageViewURL {
             movieImage.kf.setImage(with: movieImageViewURL)
@@ -120,7 +120,11 @@ extension MovieListTableViewCell {
         
         movieTitleLabel.text = movieTitle
         movieReleaseDateLabel.text = releaseDate
-        movieAverageVoteLabel.text = String(averageVote)
+        movieAverageVoteLabel.text = String(averageVote ?? 0.0)
+        movieReleaseDateLabel.isHidden = releaseDate == nil
+        releaseDateFixedLabel.isHidden = releaseDate == nil
+        movieAverageVoteLabel.isHidden = averageVote == nil
+        averageVoteFixedLabel.isHidden = averageVote == nil
         invalidateIntrinsicContentSize()
     }
 }

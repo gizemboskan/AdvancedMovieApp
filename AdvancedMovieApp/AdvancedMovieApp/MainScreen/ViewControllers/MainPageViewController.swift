@@ -59,7 +59,7 @@ extension MainPageViewController {
             self.mainScreenView.tableView.reloadData()
         }).disposed(by: bag)
         
-        viewModel.filteredMoviesDatasource.subscribe(onNext: { [weak self] data in
+        viewModel.searchMovieAndPersonDataSource.subscribe(onNext: { [weak self] data in
             guard let self = self else { return }
             
             if data.isEmpty {
@@ -101,6 +101,14 @@ extension MainPageViewController {
             })
             .disposed(by: bag)
         
+        viewModel.navigateToPersonDetailReady
+            .compactMap{ $0 }
+            .subscribe(onNext: { [weak self] personDetailViewModel in
+                let personDetailViewController = PersonDetailBuilder.make(with: personDetailViewModel)
+                self?.navigationController?.pushViewController(personDetailViewController, animated: true)
+            })
+            .disposed(by: bag)
+        
         viewModel.isLoading.asObservable()
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { [weak self] isLoading in
@@ -123,6 +131,9 @@ extension MainPageViewController {
     }
     
     func loadMoreMovies(){
+        if let isFiltering = viewModel?.isFiltering.value, isFiltering {
+            return
+        }
         viewModel?.getMovieList()
     }
     
@@ -140,41 +151,75 @@ extension MainPageViewController {
 // MARK: - UITableViewDataSource
 extension MainPageViewController: UITableViewDataSource {
     
+    func numberOfSections(in tableView: UITableView) -> Int {
+        guard let viewModel = viewModel else { return .zero }
+        
+        return viewModel.isFiltering.value ? 2 : 1
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let viewModel = viewModel else { return .zero }
         
-        return viewModel.isFiltering.value ? viewModel.filteredMoviesDatasource.value.count : viewModel.movieDatasource.value.count
+        return viewModel.isFiltering.value ? viewModel.getFilteredResultCount(section: section) : viewModel.movieDatasource.value.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let viewModel = viewModel else { return UITableViewCell() }
-        
         let cell: MovieListTableViewCell = tableView.deque(at: indexPath)
-        let movie = {
-            viewModel.isFiltering.value ? viewModel.filteredMoviesDatasource.value[indexPath.row] :
+        
+        if viewModel.isFiltering.value {
+            
+            let filteredResult = viewModel.getFilteredResultItem(indexPath: indexPath)
+            let filteredResultTitle = filteredResult?.mediaType == .movie ? filteredResult?.title.orEmpty : filteredResult?.name.orEmpty
+            let posterPath = filteredResult?.mediaType == .movie ? filteredResult?.posterPath.orEmpty : filteredResult?.profilePath.orEmpty
+            let filteredResultImageViewURL = URL.posterImage(posterPath: posterPath.orEmpty)
+            let foregroundPosterPath = filteredResult?.mediaType == .movie ? filteredResult?.posterPath.orEmpty : filteredResult?.profilePath.orEmpty
+            let foregroundPosterImageViewURL = URL.posterImage(posterPath: foregroundPosterPath.orEmpty)
+            let releaseDate = filteredResult?.releaseDate == nil ? nil : String(filteredResult?.releaseDate?.prefix(4) ?? "")
+            let averageVote = filteredResult?.voteAverage
+            cell.populateUI(movieImageViewURL: filteredResultImageViewURL, foregroundPosterImageViewURL: foregroundPosterImageViewURL,
+                            movieTitle: filteredResultTitle.orEmpty,
+                            releaseDate: releaseDate, averageVote: averageVote)
+        } else {
+            let movie = {
                 viewModel.movieDatasource.value[indexPath.row]
-        }()
-        let movieTitle = movie.title.orEmpty
-        let posterPath = movie.posterPath
-        let movieImageViewURL = URL.posterImage(posterPath: posterPath.orEmpty)
-        let foregroundPosterPath = movie.backdropPath
-        let foregroundPosterImageViewURL = URL.posterImage(posterPath: foregroundPosterPath.orEmpty)
-        let releaseDate = String(movie.releaseDate?.prefix(4) ?? "")
-        let averageVote = movie.voteAverage ?? .zero
-        cell.populateUI(movieImageViewURL: movieImageViewURL, foregroundPosterImageViewURL: foregroundPosterImageViewURL,
-                        movieTitle: movieTitle,
-                        releaseDate: releaseDate, averageVote: averageVote)
+            }()
+            let movieTitle = movie.title.orEmpty
+            let posterPath = movie.posterPath
+            let movieImageViewURL = URL.posterImage(posterPath: posterPath.orEmpty)
+            let foregroundPosterPath = movie.backdropPath
+            let foregroundPosterImageViewURL = URL.posterImage(posterPath: foregroundPosterPath.orEmpty)
+            let releaseDate = String(movie.releaseDate?.prefix(4) ?? "")
+            let averageVote = movie.voteAverage ?? .zero
+            cell.populateUI(movieImageViewURL: movieImageViewURL, foregroundPosterImageViewURL: foregroundPosterImageViewURL,
+                            movieTitle: movieTitle,
+                            releaseDate: releaseDate, averageVote: averageVote)
+        }
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let viewModel = viewModel else { return }
         
-        let movie = {
-            viewModel.isFiltering.value ? viewModel.filteredMoviesDatasource.value[indexPath.row] :
-                viewModel.movieDatasource.value[indexPath.row]
-        }()
+        if viewModel.isFiltering.value {
+            return
+        }
+        let movie = viewModel.movieDatasource.value[indexPath.row]
         viewModel.navigateToDetail(movie: movie)
+        
+    }
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        
+        if let isFilteringCompleted = viewModel?.isFiltering.value, isFilteringCompleted, let datasource = viewModel?.searchMovieAndPersonDataSource.value, datasource.isEmpty {
+            return nil
+        }
+        
+        let headerTitles = ["Movies", "People"]
+        
+        if section < headerTitles.count {
+            return headerTitles[section]
+        }
+        return nil
     }
 }
 

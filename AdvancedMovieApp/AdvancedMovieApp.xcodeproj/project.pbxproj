@@ -40,6 +40,7 @@
 		7A0B8EED2731B61A00444636 /* MovieDetailBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0B8EEC2731B61A00444636 /* MovieDetailBuilder.swift */; };
 		7A0B8EEF2731D53200444636 /* PersonDetailBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0B8EEE2731D53200444636 /* PersonDetailBuilder.swift */; };
 		7A0B8EF12731DAD700444636 /* PersonDetailApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0B8EF02731DAD700444636 /* PersonDetailApi.swift */; };
+		7A0B8EF42733249F00444636 /* MultiSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A0B8EF32733249F00444636 /* MultiSearch.swift */; };
 		7AFC31B42728111E00A8315F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AFC31B32728111E00A8315F /* AppDelegate.swift */; };
 		7AFC31B62728111E00A8315F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AFC31B52728111E00A8315F /* SceneDelegate.swift */; };
 		7AFC31B82728111E00A8315F /* MainPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AFC31B72728111E00A8315F /* MainPageViewController.swift */; };
@@ -113,6 +114,7 @@
 		7A0B8EEC2731B61A00444636 /* MovieDetailBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailBuilder.swift; sourceTree = "<group>"; };
 		7A0B8EEE2731D53200444636 /* PersonDetailBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonDetailBuilder.swift; sourceTree = "<group>"; };
 		7A0B8EF02731DAD700444636 /* PersonDetailApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonDetailApi.swift; sourceTree = "<group>"; };
+		7A0B8EF32733249F00444636 /* MultiSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiSearch.swift; sourceTree = "<group>"; };
 		7AFC31B02728111E00A8315F /* AdvancedMovieApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdvancedMovieApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AFC31B32728111E00A8315F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFC31B52728111E00A8315F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -436,6 +438,7 @@
 				7AFC3216272895AD00A8315F /* Person.swift */,
 				7A0B8ED3272EF4DF00444636 /* PersonCastResults.swift */,
 				7A0B8EE727312F0600444636 /* Video.swift */,
+				7A0B8EF32733249F00444636 /* MultiSearch.swift */,
 			);
 			name = DTOs;
 			sourceTree = "<group>";
@@ -632,6 +635,7 @@
 				7A0B8EB1272ABB8F00444636 /* UIImageView+Extension.swift in Sources */,
 				7A0B8EF12731DAD700444636 /* PersonDetailApi.swift in Sources */,
 				7A0B8E8B2729D39F00444636 /* PersonDetailViewController.swift in Sources */,
+				7A0B8EF42733249F00444636 /* MultiSearch.swift in Sources */,
 				7AFC321127284B9400A8315F /* Cast.swift in Sources */,
 				7AFC31EA272811C700A8315F /* AppContainer.swift in Sources */,
 				7AFC31B42728111E00A8315F /* AppDelegate.swift in Sources */,

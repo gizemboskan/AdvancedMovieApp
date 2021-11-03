@@ -43,17 +43,17 @@ extension URL {
     
     static func searchMovie(query: String) -> URL?{
         URL(string: Endpoints.base + "/search/movie" + Endpoints.apiKeyParam +
-                "&query=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""))")
+                "&query=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")
     }
     
     static func searchPerson(query: String) -> URL?{
         URL(string: Endpoints.base + "/search/person" + Endpoints.apiKeyParam +
-                "&query=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""))")
+                "&query=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")")
     }
     
     static func searchPersonAndMovie(query: String) -> URL?{
         URL(string: Endpoints.base + "/search/multi" + Endpoints.apiKeyParam +
-                "&query=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""))")
+                "&query=\(query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")&language=en-US&")
     }
     
     static func posterImage(posterPath: String) -> URL?{
