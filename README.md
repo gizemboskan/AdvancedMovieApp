@@ -31,7 +31,7 @@ Advanced Movie App! This iOS app uses TMDB API. Users may browse through popular
 * Kingfisher https://github.com/onevcat/Kingfisher
 
 ## Implementation and Features
-
+*Coming Soon!*
 
 
 ## Requirements
@@ -42,7 +42,7 @@ Advanced Movie App! This iOS app uses TMDB API. Users may browse through popular
 * Portrait and Landscape mode 
 
 ## Previews for Usage 
-
+*Coming Soon!*
 
 
 ## License
