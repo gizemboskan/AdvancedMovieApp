@@ -21,7 +21,7 @@ Advanced Movie App! This iOS app uses TMDB API. Users may browse through popular
 * RxSwift!
 * MVVM, reactive patterns for bindings 
 * Swift Package Manager 
-* Programmatic auto-layout for UI design
+* Programmatic auto-layout for UI design; support portrait and landscape modes for various devices.
 * Separate networking layer by protocol extensions
 * Some reusable views, empty state views, custom alerts, activity indicators, proper searching, pagination, organized folder structure.
 
@@ -40,7 +40,7 @@ Advanced Movie App! This iOS app uses TMDB API. Users may browse through popular
 * Xcode 12.5
 * Swift 5
 * iOS 13.0 minimum target
-* Portrait and Landscape modes
+
 
 ## Previews for Usage 
 *Coming Soon!*
