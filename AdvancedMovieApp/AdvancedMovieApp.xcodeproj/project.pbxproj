@@ -172,10 +172,8 @@
 			isa = PBXGroup;
 			children = (
 				7A41C2372733D65A00906086 /* MainScreen */,
-				7A41C2432733D65A00906086 /* Extensions */,
 				7A41C2502733D65A00906086 /* PersonDetailScreen */,
 				7A41C25C2733D65A00906086 /* MovieDetailScreen */,
-				7A41C2682733D65A00906086 /* CustomViews */,
 			);
 			path = Scenes;
 			sourceTree = "<group>";
@@ -183,12 +181,12 @@
 		7A41C2372733D65A00906086 /* MainScreen */ = {
 			isa = PBXGroup;
 			children = (
-				7A41C2382733D65A00906086 /* ViewModels */,
-				7A41C23A2733D65A00906086 /* Cells */,
-				7A41C23C2733D65A00906086 /* ViewControllers */,
 				7A41C23E2733D65A00906086 /* MainScreenBuilder.swift */,
 				7A41C23F2733D65A00906086 /* Api */,
+				7A41C23A2733D65A00906086 /* Cells */,
 				7A41C2412733D65A00906086 /* Views */,
+				7A41C2382733D65A00906086 /* ViewModels */,
+				7A41C23C2733D65A00906086 /* ViewControllers */,
 			);
 			path = MainScreen;
 			sourceTree = "<group>";
@@ -255,12 +253,12 @@
 		7A41C2502733D65A00906086 /* PersonDetailScreen */ = {
 			isa = PBXGroup;
 			children = (
-				7A41C2512733D65A00906086 /* ViewModels */,
-				7A41C2532733D65A00906086 /* Cells */,
-				7A41C2552733D65A00906086 /* ViewControllers */,
 				7A41C2572733D65A00906086 /* PersonDetailBuilder.swift */,
 				7A41C2582733D65A00906086 /* Api */,
 				7A41C25A2733D65A00906086 /* Views */,
+				7A41C2532733D65A00906086 /* Cells */,
+				7A41C2512733D65A00906086 /* ViewModels */,
+				7A41C2552733D65A00906086 /* ViewControllers */,
 			);
 			path = PersonDetailScreen;
 			sourceTree = "<group>";
@@ -308,12 +306,12 @@
 		7A41C25C2733D65A00906086 /* MovieDetailScreen */ = {
 			isa = PBXGroup;
 			children = (
-				7A41C25D2733D65A00906086 /* ViewModels */,
-				7A41C25F2733D65A00906086 /* Cells */,
 				7A41C2612733D65A00906086 /* MovieDetailBuilder.swift */,
-				7A41C2622733D65A00906086 /* ViewControllers */,
 				7A41C2642733D65A00906086 /* Api */,
+				7A41C25F2733D65A00906086 /* Cells */,
 				7A41C2662733D65A00906086 /* Views */,
+				7A41C25D2733D65A00906086 /* ViewModels */,
+				7A41C2622733D65A00906086 /* ViewControllers */,
 			);
 			path = MovieDetailScreen;
 			sourceTree = "<group>";
@@ -434,6 +432,8 @@
 				7AFC31E82728119D00A8315F /* App */,
 				7AFC31B52728111E00A8315F /* SceneDelegate.swift */,
 				7A41C2362733D65A00906086 /* Scenes */,
+				7A41C2432733D65A00906086 /* Extensions */,
+				7A41C2682733D65A00906086 /* CustomViews */,
 				7A41C2892733D68C00906086 /* API */,
 				7AFC31B92728111E00A8315F /* Main.storyboard */,
 				7AFC31BC2728112000A8315F /* Assets.xcassets */,
