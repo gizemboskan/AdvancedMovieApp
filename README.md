@@ -39,7 +39,7 @@ Advanced Movie App! This iOS app uses TMDB API. Users may browse through popular
 * Xcode 12.5
 * Swift 5
 * iOS 13.0 minimum target
-* Portrait and Landscape mode 
+* Portrait and Landscape modes
 
 ## Previews for Usage 
 *Coming Soon!*
