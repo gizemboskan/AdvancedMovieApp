@@ -164,18 +164,17 @@ extension MainPageViewController: UITableViewDataSource {
         let cell: MovieListTableViewCell = tableView.deque(at: indexPath)
         
         if viewModel.isFiltering.value {
-            
             let filteredResult = viewModel.getFilteredResultItem(indexPath: indexPath)
             let filteredResultTitle = filteredResult?.mediaType == .movie ? filteredResult?.title.orEmpty : filteredResult?.name.orEmpty
             let posterPath = filteredResult?.mediaType == .movie ? filteredResult?.posterPath.orEmpty : filteredResult?.profilePath.orEmpty
             let filteredResultImageViewURL = URL.posterImage(posterPath: posterPath.orEmpty)
-            let foregroundPosterPath = filteredResult?.mediaType == .movie ? filteredResult?.posterPath.orEmpty : filteredResult?.profilePath.orEmpty
+            let foregroundPosterPath = filteredResult?.mediaType == .movie ? filteredResult?.posterPath.orEmpty : filteredResult?.backdropPath.orEmpty
             let foregroundPosterImageViewURL = URL.posterImage(posterPath: foregroundPosterPath.orEmpty)
             let releaseDate = filteredResult?.releaseDate == nil ? nil : String(filteredResult?.releaseDate?.prefix(4) ?? "")
             let averageVote = filteredResult?.voteAverage
             cell.populateUI(movieImageViewURL: filteredResultImageViewURL, foregroundPosterImageViewURL: foregroundPosterImageViewURL,
                             movieTitle: filteredResultTitle.orEmpty,
-                            releaseDate: releaseDate, averageVote: averageVote)
+                        releaseDate: releaseDate, averageVote: averageVote)
         } else {
             let movie = {
                 viewModel.movieDatasource.value[indexPath.row]
@@ -197,7 +196,8 @@ extension MainPageViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let viewModel = viewModel else { return }
         
-        if viewModel.isFiltering.value, let filteredResult = viewModel.getFilteredResultItem(indexPath: indexPath), let id = filteredResult.id {
+        if viewModel.isFiltering.value, let filteredResult = viewModel.getFilteredResultItem(indexPath: indexPath),
+           let id = filteredResult.id {
             switch filteredResult.mediaType {
             case .movie:
                 viewModel.navigateToDetail(id: id)
@@ -214,7 +214,8 @@ extension MainPageViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
-        if let isFilteringCompleted = viewModel?.isFiltering.value, isFilteringCompleted, let datasource = viewModel?.searchMovieAndPersonDataSource.value, datasource.isEmpty {
+        if let isFilteringCompleted = viewModel?.isFiltering.value, isFilteringCompleted,
+           let datasource = viewModel?.searchMovieAndPersonDataSource.value, datasource.isEmpty {
             return nil
         }
         

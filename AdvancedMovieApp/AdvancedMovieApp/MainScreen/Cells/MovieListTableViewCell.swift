@@ -22,11 +22,10 @@ final class MovieListTableViewCell: UITableViewCell {
     }()
     
     private lazy var foregroundPosterImageView: UIImageView = {
-        // TODO: blur ekle!
         let foregroundPoster = UIImageView.create(image: UIImage(named: "movie"))
         foregroundPoster.sizeAnchor(width: 400, height: 200)
         foregroundPoster.roundCorners(with: 30, borderColor: .darkGray, borderWidth: 1.0)
-        foregroundPoster.blurView.setup(style: UIBlurEffect.Style.dark, alpha: 0.7).enable()
+        foregroundPoster.blurView.setup(style: UIBlurEffect.Style.dark, alpha: 0.8).enable()
         return foregroundPoster
     }()
     

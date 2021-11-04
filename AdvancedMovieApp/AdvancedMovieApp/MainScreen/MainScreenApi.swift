@@ -29,6 +29,8 @@ extension MainScreenApi {
     }
 }
 
+//  MARK: - FUTURE WORK!
+// TODO: I WILL SEPERATE ALL THIS PART TO IMPLEMENT A PROPER TEST!!!
 
 //protocol MainScreenApiProtocol {
 //    func getMovieList(pageNumber: Int)
