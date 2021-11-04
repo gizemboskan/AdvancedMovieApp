@@ -21,13 +21,13 @@ extension Video {
 
 
 // MARK: - Welcome
-struct VideoResults: Codable {
+struct VideoResults: Decodable {
     let id: Int
     let results: [Video]
 }
 
 // MARK: - Result
-struct Video: Codable {
+struct Video: Decodable {
     let iso639_1, iso3166_1, name, key: String
     let site: String
     let size: Int

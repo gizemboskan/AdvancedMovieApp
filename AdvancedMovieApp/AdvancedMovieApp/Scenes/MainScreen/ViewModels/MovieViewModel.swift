@@ -18,7 +18,7 @@ protocol MovieViewModelProtocol {
     var onError: BehaviorRelay<Bool> { get set }
     var navigateToDetailReady: BehaviorRelay<MovieDetailViewModel?> { get set }
     var navigateToPersonDetailReady: BehaviorRelay<PersonDetailViewModel?> { get set }
-
+    
     func getMovieList()
     func navigateToDetail(id: Int)
     func navigateToPersonDetail(id: Int)
@@ -27,7 +27,6 @@ protocol MovieViewModelProtocol {
 }
 
 final class MovieViewModel: MovieViewModelProtocol, MainScreenApi {
-    
     
     // MARK: - Properties
     private var currentPage: Int = 1
@@ -41,7 +40,7 @@ final class MovieViewModel: MovieViewModelProtocol, MainScreenApi {
     var onError = BehaviorRelay<Bool>(value: false)
     var navigateToDetailReady = BehaviorRelay<MovieDetailViewModel?>(value: nil)
     var navigateToPersonDetailReady = BehaviorRelay<PersonDetailViewModel?>(value: nil)
-
+    
     // MARK: - Initilizations
     init() {
         searchedKeyword
@@ -109,7 +108,7 @@ final class MovieViewModel: MovieViewModelProtocol, MainScreenApi {
 
 //MARK: - Helper Methods
 extension MovieViewModel {
-
+    
     private func searchMovieAndPerson(by searchText: String) {
         Observable.just((searchText))
             .do( onNext: { [isLoading] _ in
@@ -139,9 +138,8 @@ extension MovieViewModel {
     }
     
     private func updateMovieDatasource(with movies: [Movie]) {
-        self.movieDatasource.accept(movies)
+        self.movieDatasource.accept(movieDatasource.value + movies)
     }
-    
     
     private func updateFilteredMovieAndPersonDataSource(with searchedMoviesAndPeople: [Int: [MultiSearch]]){
         self.searchMovieAndPersonDataSource.accept(searchedMoviesAndPeople)
