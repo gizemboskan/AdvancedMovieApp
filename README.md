@@ -22,6 +22,7 @@ Advanced Movie App! This iOS app uses TMDB API. Users may browse through popular
 * MVVM, reactive patterns for bindings 
 * Swift Package Manager 
 * Programmatic auto-layout for UI design
+* Separate networking layer by protocol extensions
 * Some reusable views, empty state views, custom alerts, activity indicators, proper searching, pagination, organized folder structure.
 
 
