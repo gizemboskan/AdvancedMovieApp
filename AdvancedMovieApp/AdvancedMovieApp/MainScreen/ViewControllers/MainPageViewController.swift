@@ -131,9 +131,6 @@ extension MainPageViewController {
     }
     
     func loadMoreMovies(){
-        if let isFiltering = viewModel?.isFiltering.value, isFiltering {
-            return
-        }
         viewModel?.getMovieList()
     }
     
@@ -142,7 +139,6 @@ extension MainPageViewController {
         
         if (((scrollView.contentOffset.y + scrollView.frame.size.height) > scrollView.contentSize.height )
                 && viewModel.isLoading.value != true){
-            viewModel.isLoading.accept(true)
             self.loadMoreMovies()
         }
     }
@@ -201,13 +197,21 @@ extension MainPageViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let viewModel = viewModel else { return }
         
-        if viewModel.isFiltering.value {
-            return
+        if viewModel.isFiltering.value, let filteredResult = viewModel.getFilteredResultItem(indexPath: indexPath), let id = filteredResult.id {
+            switch filteredResult.mediaType {
+            case .movie:
+                viewModel.navigateToDetail(id: id)
+            case .person:
+                viewModel.navigateToPersonDetail(id: id)
+            case .tv:
+                break // DON'T SUPPORT IT
+            }
+        } else {
+            let movie = viewModel.movieDatasource.value[indexPath.row]
+            viewModel.navigateToDetail(id: movie.id)
         }
-        let movie = viewModel.movieDatasource.value[indexPath.row]
-        viewModel.navigateToDetail(movie: movie)
-        
     }
+
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
         if let isFilteringCompleted = viewModel?.isFiltering.value, isFilteringCompleted, let datasource = viewModel?.searchMovieAndPersonDataSource.value, datasource.isEmpty {

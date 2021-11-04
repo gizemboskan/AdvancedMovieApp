@@ -20,7 +20,8 @@ protocol MovieViewModelProtocol {
     var navigateToPersonDetailReady: BehaviorRelay<PersonDetailViewModel?> { get set }
 
     func getMovieList()
-    func navigateToDetail(movie: Movie)
+    func navigateToDetail(id: Int)
+    func navigateToPersonDetail(id: Int)
     func getFilteredResultCount(section: Int) -> Int
     func getFilteredResultItem(indexPath: IndexPath) -> MultiSearch?
 }
@@ -50,7 +51,6 @@ final class MovieViewModel: MovieViewModelProtocol, MainScreenApi {
                     self?.isFiltering.accept(false)
                 } else {
                     self?.isFiltering.accept(true)
-                    // self?.searchMovie(by: searchedText)
                     self?.searchMovieAndPerson(by: searchedText)
                 }
             })
@@ -59,7 +59,7 @@ final class MovieViewModel: MovieViewModelProtocol, MainScreenApi {
     
     //MARK: - Public Methods
     func getMovieList() {
-        if isFiltering.value, currentPage > 500 {
+        if isFiltering.value || currentPage > 500 {
             return
         }
         
@@ -80,9 +80,9 @@ final class MovieViewModel: MovieViewModelProtocol, MainScreenApi {
             .disposed(by: bag)
     }
     
-    func navigateToDetail(movie: Movie) {
+    func navigateToDetail(id: Int) {
         let detailViewModel = MovieDetailViewModel()
-        detailViewModel.movieDetailDatasource.accept(movie)
+        detailViewModel.movieIdDatasource.accept(id)
         navigateToDetailReady.accept(detailViewModel)
     }
     
@@ -109,25 +109,7 @@ final class MovieViewModel: MovieViewModelProtocol, MainScreenApi {
 
 //MARK: - Helper Methods
 extension MovieViewModel {
-    
-    //    private func searchMovie(by movie: String) {
-    //        Observable.just((movie))
-    //            .do( onNext: { [isLoading] _ in
-    //                isLoading.accept(true)
-    //            })
-    //            .flatMap { movie in
-    //                self.searchMovie(movie: movie)
-    //            }
-    //            .observe(on: MainScheduler.instance)
-    //            .retry(3) // to try the internet connection loss
-    //            .do(onError: { _ in self.onError.accept(true) })
-    //            .do(onDispose: { [isLoading] in isLoading.accept(false) })
-    //            .subscribe(onNext: { [weak self] movieResponse in
-    //                self?.updateFilteredMoviesDatasource(with: movieResponse.results)
-    //            })
-    //            .disposed(by: bag)
-    //    }
-    
+
     private func searchMovieAndPerson(by searchText: String) {
         Observable.just((searchText))
             .do( onNext: { [isLoading] _ in

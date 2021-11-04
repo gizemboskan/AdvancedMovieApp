@@ -45,12 +45,19 @@ extension MovieDetailViewController {
 extension MovieDetailViewController {
     func observeDataSource(){
         guard let viewModel = viewModel else { return }
-        
+
+        viewModel.movieIdDatasource
+            .subscribe(onNext: { [weak self] data in
+                guard let self = self,
+                      let id = data else { return }
+                self.viewModel?.getMovieDetails(movieId: id)
+            }).disposed(by: bag)
+
         viewModel
             .movieDetailDatasource
             .subscribe(onNext: { [weak self] data in
                 guard let self = self,
-                      let movie = viewModel.movieDetailDatasource.value else { return }
+                      let movie = data else { return }
                 self.observeUI(with: movie)
                 viewModel.getMovieCredits(movieId: movie.id)
                 viewModel.getVideos(movieId: movie.id)

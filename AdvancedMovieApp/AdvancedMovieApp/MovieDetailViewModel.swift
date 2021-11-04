@@ -10,11 +10,13 @@ import RxSwift
 import RxCocoa
 
 protocol MovieDetailViewModelProtocol {
+    var movieIdDatasource: BehaviorRelay<Int?> { get set }
     var movieDetailDatasource: BehaviorRelay<Movie?> { get set }
     var movieCreditsDatasource: BehaviorRelay<[Cast?]> { get set }
     var movieVideoDatasource: BehaviorRelay<VideoResults?> { get set }
     var isLoading: BehaviorRelay<Bool> { get set }
     var onError: BehaviorRelay<Bool> { get set }
+    func getMovieDetails(movieId: Int)
     func getMovieCredits(movieId: Int)
     func getVideos(movieId: Int)
     var navigateToDetailReady: BehaviorRelay<PersonDetailViewModel?> { get set }
@@ -28,12 +30,29 @@ final class MovieDetailViewModel: MovieDetailViewModelProtocol, MovieDetailApi {
     
     var isLoading = BehaviorRelay<Bool>(value: false)
     var onError = BehaviorRelay<Bool>(value: false)
+    var movieIdDatasource = BehaviorRelay<Int?>(value: nil)
     var movieDetailDatasource = BehaviorRelay<Movie?>(value: nil)
     var movieCreditsDatasource = BehaviorRelay<[Cast?]>(value: [nil])
     var movieVideoDatasource = BehaviorRelay<VideoResults?>(value: nil)
     var navigateToDetailReady = BehaviorRelay<PersonDetailViewModel?>(value: nil)
     
-    
+    func getMovieDetails(movieId: Int) {
+        Observable.just((movieId))
+            .do( onNext: { [isLoading] _ in
+                isLoading.accept(true)
+            })
+            .flatMap { movieId in
+                self.getMovieDetails(movieId: movieId)
+            }
+            .observe(on: MainScheduler.instance)
+            .do(onError: { _ in self.onError.accept(true) })
+            .do(onDispose: { [isLoading] in isLoading.accept(false) })
+            .subscribe(onNext: { [weak self] movie in
+                self?.updateMovieDetailDatasource(with: movie)
+            })
+            .disposed(by: bag)
+    }
+
     func getMovieCredits(movieId: Int) {
         Observable.just((movieId))
             .do( onNext: { [isLoading] _ in
