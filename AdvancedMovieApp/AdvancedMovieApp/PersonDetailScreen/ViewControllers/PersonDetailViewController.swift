@@ -29,9 +29,7 @@ final class PersonDetailViewController: UIViewController {
         super.viewDidLoad()
         arrangeViews()
         observeDataSource()
-        personDetailView.moviesCollectionView.reloadData()
-        viewModel?.getPersonDetails(personId: viewModel?.personIdDatasource.value ?? 0)
-        
+        personDetailView.moviesCollectionView.reloadData()        
     }
 }
 
@@ -48,11 +46,18 @@ extension PersonDetailViewController {
 extension PersonDetailViewController {
     func observeDataSource(){
         guard let viewModel = viewModel else { return }
-        
+
+        viewModel.personIdDatasource
+            .subscribe(onNext: { [weak self] data in
+                guard let self = self,
+                      let id = data else { return }
+                self.viewModel?.getPersonDetails(personId: id)
+            }).disposed(by: bag)
+
         viewModel.personDetailsDatasource
             .subscribe(onNext: { [weak self] data in
                 guard let self = self,
-                      let person = viewModel.personDetailsDatasource.value else { return }
+                      let person = data else { return }
                 self.observeUI(with: person)
                 viewModel.getPersonMovieCredits(personId: person.id)
             }).disposed(by: bag)
