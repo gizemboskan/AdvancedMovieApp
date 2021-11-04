@@ -9,8 +9,7 @@ import Foundation
 
 final class MovieDetailBuilder {
     
-    static func make(with viewModel: MovieDetailViewModel) ->
-    MovieDetailViewController {
+    static func make(with viewModel: MovieDetailViewModel) -> MovieDetailViewController {
         let viewController = MovieDetailViewController()
         viewController.viewModel = viewModel
         return viewController

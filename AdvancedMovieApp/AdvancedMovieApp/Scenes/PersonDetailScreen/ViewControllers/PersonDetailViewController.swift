@@ -144,5 +144,3 @@ extension PersonDetailViewController: UICollectionViewDelegate, UICollectionView
         viewModel.navigateToDetail(movie: movieCredits)
     }
 }
-
-

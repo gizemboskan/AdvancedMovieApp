@@ -33,5 +33,3 @@ struct Cast: Decodable {
         case order, department, job
     }
 }
-
-

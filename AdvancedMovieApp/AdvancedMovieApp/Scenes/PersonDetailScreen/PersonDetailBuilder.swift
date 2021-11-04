@@ -9,8 +9,7 @@ import UIKit
 
 final class PersonDetailBuilder {
     
-    static func make(with viewModel: PersonDetailViewModel) ->
-    PersonDetailViewController {
+    static func make(with viewModel: PersonDetailViewModel) -> PersonDetailViewController {
         let viewController = PersonDetailViewController()
         viewController.viewModel = viewModel 
         return viewController

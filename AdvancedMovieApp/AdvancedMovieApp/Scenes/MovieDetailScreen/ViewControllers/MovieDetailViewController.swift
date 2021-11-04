@@ -152,4 +152,3 @@ extension MovieDetailViewController: UICollectionViewDelegate, UICollectionViewD
         viewModel.navigateToDetail(id: movieCredits?.id ?? 0)
     }
 }
-

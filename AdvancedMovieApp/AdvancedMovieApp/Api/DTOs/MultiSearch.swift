@@ -7,7 +7,7 @@
 
 
 // MARK: - Welcome
-struct MultiSearchResult: Codable {
+struct MultiSearchResult: Decodable {
     let page: Int
     let results: [MultiSearch]
     let totalResults, totalPages: Int
@@ -20,7 +20,7 @@ struct MultiSearchResult: Codable {
 }
 
 // MARK: - Result
-struct MultiSearch: Codable {
+struct MultiSearch: Decodable {
     let posterPath: String?
     let popularity: Double?
     let id: Int?
@@ -60,7 +60,7 @@ struct MultiSearch: Codable {
     }
 }
 
-enum MediaType: String, Codable {
+enum MediaType: String, Decodable {
     case movie = "movie"
     case person = "person"
     case tv = "tv"

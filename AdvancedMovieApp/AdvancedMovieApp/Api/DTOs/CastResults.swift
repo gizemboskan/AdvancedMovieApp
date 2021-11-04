@@ -13,5 +13,3 @@ struct CastResults: Decodable {
     let id: Int
     let cast, crew: [Cast?]
 }
-
-

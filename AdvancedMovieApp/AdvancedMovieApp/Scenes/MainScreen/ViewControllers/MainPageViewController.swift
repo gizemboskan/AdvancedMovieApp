@@ -234,4 +234,3 @@ extension MainPageViewController: UITableViewDelegate {
         UITableView.automaticDimension
     }
 }
-
