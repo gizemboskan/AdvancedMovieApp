@@ -43,7 +43,9 @@ Advanced Movie App! This iOS app uses TMDB API. Users may browse through popular
 
 
 ## Previews for Usage 
-*Coming Soon!*
+| Preview |  
+| --- | 
+| ![Preview](gifs/preview.gif) | 
 
 
 ## License
